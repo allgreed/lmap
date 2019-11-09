@@ -4,25 +4,25 @@ REACT_APP_CMD := npx react-scripts
 
 # Porcelain
 # ###############
-.PHONY: env-up env-down env-recreate ci build lint test container
+.PHONY: env-up env-down env-recreate ci lint test container
 
 serve: ## run development server
 	$(REACT_APP_CMD) start
 
-ci: setup lint test build push-container-image ## run all tests and build all artifacts
+ci: node_modules lint test build push-container-image ## run all tests and build all artifacts
 	@echo "Not implemented"; false
 
-build: setup ## create artifact
+build: node_modules src ## create artifact
 	$(REACT_APP_CMD) build
 
 lint: ## run static analysis
 	@echo "Not implemented"; false
 
-test: setup ## run all tests
+test: node_modules ## run all tests
 	$(REACT_APP_CMD) test
 
 container: build ## create container
-	@echo "Not implemented"; false
+	docker build -t lmap .
 
 init: ## one time setup
 	direnv allow
@@ -30,9 +30,7 @@ init: ## one time setup
 
 # Plumbing
 # ###############
-.PHONY: setup push-container-image
-
-setup: node_modules
+.PHONY: push-container-image
 
 node_modules: package.json yarn.lock
 	yarn

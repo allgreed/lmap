@@ -1,6 +1,7 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import './core/main.ts';
 
 const App: React.FC = () => {
   return (

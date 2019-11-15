@@ -6,5 +6,5 @@ let
   node = nodejs-10_x;
 in
 mkShell {
-  buildInputs = [ node git gnumake ];
+  buildInputs = [ node git gnumake yarn ];
 }

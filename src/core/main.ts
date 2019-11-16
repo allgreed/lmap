@@ -1,5 +1,5 @@
 interface URL {
-    content: string;
+    address: string;
     is_done: boolean;
 }
 
@@ -10,7 +10,8 @@ interface Name {
 
 type Resource = URL | Name;
 
-type Tree = Resource | [Resource, Tree];
+type Leaf = null;
+type Tree = Leaf | [Resource, Tree[]];
 
 export default {};
 

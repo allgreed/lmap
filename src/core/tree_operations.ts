@@ -8,10 +8,10 @@ class TreeNode {
     this.data = data;
     this.is_done = is_done;
     this.children = children;
-  };
+  }
   add(node:TreeNode){
     this.children.push(node);
-  };
+  }
   remove(id:number){
     for(let i:number = 0;i<this.children.length;i++){
       if(this.children[i].id == id){
@@ -19,7 +19,10 @@ class TreeNode {
         break;
       }
     }
-  };
+  }
+    getData() {
+        return this.data;
+  }
 }
 
 function getParent(node:TreeNode, root:TreeNode, parentList:Array<TreeNode>){
@@ -40,16 +43,16 @@ function howManyTreeNodes(node:TreeNode):number {
   return no;
 }
 
-function whichTreeNodesContain(text:string, node:TreeNode, results:Array<TreeNode>){
+function whichTreeNodesContains(text:string, node:TreeNode, results:Array<TreeNode>){
   node.children.forEach(function(child){
     if(child.data.includes(text)){
       results.push(child);
     }
-    whichTreeNodesContain(text, child, results);
+    whichTreeNodesContains(text, child, results);
   });
 }
 
-
+//SETUP
 let root:TreeNode = new TreeNode(0, "korzen", false);
 let note1:TreeNode = new TreeNode(1, "notka1", false);
 let note2:TreeNode = new TreeNode(2, "notka2", false);
@@ -68,14 +71,17 @@ note2.add(note22);
 note22.add(note221);
 note22.add(note222);
 note3.add(note31);
+
+//TEST
 console.log(howManyTreeNodes(root));
 let exampleNodes = new Array<TreeNode>();
-whichTreeNodesContain("1od", root, exampleNodes);
-for(i in exampleNodes){
+whichTreeNodesContains("1od", root, exampleNodes);
+for(let i in exampleNodes){
   console.log(exampleNodes[i].id);
 }
-let exampleParent:Array<TreeNode>;
+let exampleParent:Array<TreeNode> = [];
 getParent(exampleNodes[0], root, exampleParent);
 console.log(exampleParent);
-exampleParent.remove(4);
+console.log(exampleParent[0].getData());
+exampleParent[0].remove(4);
 console.log(howManyTreeNodes(root));

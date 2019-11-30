@@ -10,7 +10,7 @@ interface Name {
 
 type Resource = URL | Name;
 
-type Tree = Resource | [Resource, Tree];
+type Tree = Resource | [Resource, Array<Tree>];
 
 export default {};
 

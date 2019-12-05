@@ -1,5 +1,5 @@
 import React from 'react';
-import logo from './logo.svg';
+//import logo from './logo.svg';
 import './App.css';
 //import { Tree, Leaf } from './core/main.ts';
 
@@ -21,9 +21,15 @@ export type Tree = Leaf | [Resource, Tree[]];
 // endTODO
 
 const ble: Tree = [{content: "elon", is_done: false}, [
-    [{content: "mózg", is_done: true}, []],
+    [{content: "mózg", is_done: true}, [
+      [{content: "mozg1", is_done: false}, []],
+      [{content: "mozg2", is_done: false}, []],
+      [{content: "mozg3", is_done: false}, []]
+    ]],
     [{content: "leci", is_done: false}, []],
     [{content: "w marsa", is_done: true}, []],
+    [{content: "mózg", is_done: true}, []],
+    [{address: "https://", is_done: true}, []]
 ]];
 
 function fuj(t: Tree)
@@ -42,7 +48,14 @@ function fuj(t: Tree)
         // TODO: typeguards is a protip
         <div>
 
-            <li>[{resource.is_done ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />}]</li>  // TODO: checkbox
+            <li>
+              {resource && (resource as Name).content}
+              {(resource as URL).address}
+              {resource.is_done
+                ? <input type="checkbox" checked disabled />
+                : <input type="checkbox" disabled />}
+
+              </li>
             <ul>
                 {subtrees.map(fuj)}
             </ul>

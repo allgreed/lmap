@@ -41,7 +41,7 @@ function fuj(t: Tree)
         <div>
             // TODO: handle unhandled properties
             // TODO: typeguards is a protip
-            <li>[{resource.is_done ? <input type="checkbox" checked> : <input type="checkbox">}]</li>  // TODO: checkbox
+            <li>[{resource.is_done ? <input type="checkbox" checked disabled /> : <input type="checkbox" disabled />}]</li>  // TODO: checkbox
             <ul>
                 {subtrees.map(fuj)}
             </ul>

@@ -14,8 +14,6 @@ type Resource = URL | Name;
 type Leaf = null;
 type Tree = Leaf | [Resource, Tree[]];
 
-type Tree = Resource | [Resource, Array<Tree>];
-
 export default {};
 
 // parse_tree :: Array -> Result<Tree>

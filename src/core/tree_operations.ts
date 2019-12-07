@@ -85,3 +85,5 @@ console.log(exampleParent);
 console.log(exampleParent[0].getData());
 exampleParent[0].remove(4);
 console.log(howManyTreeNodes(root));
+
+export default {};

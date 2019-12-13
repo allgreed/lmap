@@ -12,7 +12,8 @@ class TreeNode {
   add(node:TreeNode){
     this.children.push(node);
   }
-  remove(id:number){
+  remove(id: number) {
+  //remove node + any subtree
     for(let i:number = 0;i<this.children.length;i++){
       if(this.children[i].id == id){
         this.children.splice(i, 1);
@@ -82,6 +83,7 @@ note22.add(note222);
 note3.add(note31);
 
 //TEST
+console.log(root);
 console.log(howManyTreeNodes(root));
 
 let nodesWithString: TreeNode[] = whichTreeNodesContain("1od", root);
@@ -94,6 +96,16 @@ console.log(exampleParent);
 console.log(exampleParent.data);
 
 exampleParent.remove(4);
+console.log(root);
+console.log(howManyTreeNodes(root));
+
+//rm node with string "notka3"
+let x: TreeNode[] = whichTreeNodesContain("notka3", root);
+console.log(x);
+let ajdi = x[0].id;
+getParent(x[0], root).remove(ajdi);
+
+console.log(root);
 console.log(howManyTreeNodes(root));
 
 export default {};

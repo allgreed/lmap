@@ -1,9 +1,9 @@
 class TreeNode {
-  id: number;
-  data: string;
-  is_done: boolean;
-  children: Array<TreeNode>;
-  constructor(id:number, data:string, is_done:boolean, children: Array<TreeNode> = []){
+  readonly id: number;
+  readonly data: string;
+  readonly is_done: boolean;
+  readonly children: TreeNode[];
+  constructor(id:number, data:string, is_done:boolean, children: TreeNode[] = []){
     this.id = id;
     this.data = data;
     this.is_done = is_done;
@@ -20,20 +20,25 @@ class TreeNode {
       }
     }
   }
-    getData() {
-        return this.data;
-  }
 }
 
-function getParent(node:TreeNode, root:TreeNode, parentList:Array<TreeNode>){
+function getParentREC(node:TreeNode, root:TreeNode, parentList:TreeNode[]){
   for(let i:number = 0;i<root.children.length;i++){
     if(root.children[i] == node){
       parentList.push(root);
     }
-    getParent(node, root.children[i], parentList);
+    getParentREC(node, root.children[i], parentList);
 
   }
 }
+
+function getParent(node: TreeNode, rootNode: TreeNode): TreeNode[] {
+  let parent: TreeNode[] = [];
+  getParentREC(node, rootNode, parent);
+  return parent;
+}
+
+
 
 function howManyTreeNodes(node:TreeNode):number {
   let no:number = node.children.length;
@@ -43,13 +48,20 @@ function howManyTreeNodes(node:TreeNode):number {
   return no;
 }
 
-function whichTreeNodesContains(text:string, node:TreeNode, results:Array<TreeNode>){
+function whichTreeNodesContainREC(text:string, node:TreeNode, results: TreeNode[]){
   node.children.forEach(function(child){
     if(child.data.includes(text)){
       results.push(child);
     }
-    whichTreeNodesContains(text, child, results);
+    whichTreeNodesContainREC(text, child, results);
   });
+}
+
+
+function whichTreeNodesContain(text:string, node:TreeNode): TreeNode[] {
+  let searchResults: TreeNode[] = [];
+  whichTreeNodesContainREC(text, node, searchResults);
+  return searchResults;
 }
 
 //SETUP
@@ -74,15 +86,16 @@ note3.add(note31);
 
 //TEST
 console.log(howManyTreeNodes(root));
-let exampleNodes = new Array<TreeNode>();
-whichTreeNodesContains("1od", root, exampleNodes);
-for(let i in exampleNodes){
-  console.log(exampleNodes[i].id);
+
+let nodesWithString: TreeNode[] = whichTreeNodesContain("1od", root);
+for(let i in nodesWithString){
+  console.log(nodesWithString[i].id);
 }
-let exampleParent:Array<TreeNode> = [];
-getParent(exampleNodes[0], root, exampleParent);
+
+let exampleParent: TreeNode[] = getParent(nodesWithString[0], root);
 console.log(exampleParent);
-console.log(exampleParent[0].getData());
+console.log(exampleParent[0].data);
+
 exampleParent[0].remove(4);
 console.log(howManyTreeNodes(root));
 

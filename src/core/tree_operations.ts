@@ -19,6 +19,18 @@ class TreeNode {
       }
     }
   }
+  removeNode(node:TreeNode) {
+  //remove node + attach its any Children to this.
+    for(let i:number = 0;i<this.children.length;i++){
+      if (this.children[i] === node) {
+        for (let j: number = 0; j < this.children[i].children.length; j++) {
+          this.add(this.children[i].children[j]);
+        }
+        this.children.splice(i, 1);
+        break;
+      }
+    }
+  }
 }
 
 function getParentREC(node:TreeNode, root:TreeNode, parentList:TreeNode[]) {

@@ -1,44 +1,37 @@
-interface URL {
-    address: string;
-    is_done: boolean;
-}
-
-interface Name {
-    data: string;
-    is_done: boolean;
-}
-
-export type Resource = URL | Name;
-
-export type Leaf = null;
-export type Tree = Leaf | [Resource, Tree[]];
-
-
-function add(node:TreeNode, toNode:TreeNode){
-  toNode.children.push(node);
-}
-function remove(node:TreeNode, fromNode:TreeNode) {
-//remove node + any subtree
-  for(let i:number = 0;i<fromNode.children.length;i++){
-    if(fromNode.children[i] === node){
-        fromNode.children.splice(i, 1);
+class TreeNode {
+  readonly data: string;
+  readonly is_done: boolean;
+  readonly children: TreeNode[];
+  constructor(data:string, is_done:boolean, children: TreeNode[] = []){
+    this.data = data;
+    this.is_done = is_done;
+    this.children = children;
+  }
+  add(node:TreeNode){
+    this.children.push(node);
+  }
+  remove(node:TreeNode) {
+  //remove node + any subtree
+    for(let i:number = 0;i<this.children.length;i++){
+      if(this.children[i] === node){
+        this.children.splice(i, 1);
         break;
-    }
-  }
-}
-function removeNode(node:TreeNode, fromNode:TreeNode) {
-//remove node + attach its any Children to this.
-  for(let i:number = 0;i<fromNode.children.length;i++){
-    if (fromNode.children[i] === node) {
-      for (let j: number = 0; j < fromNode.children[i].children.length; j++) {
-        add(fromNode.children[i].children[j], fromNode);
       }
-      fromNode.children.splice(i, 1);
-      break;
+    }
+  }
+  removeNode(node:TreeNode) {
+  //remove node + attach its any Children to this.
+    for(let i:number = 0;i<this.children.length;i++){
+      if (this.children[i] === node) {
+        for (let j: number = 0; j < this.children[i].children.length; j++) {
+          this.add(this.children[i].children[j]);
+        }
+        this.children.splice(i, 1);
+        break;
+      }
     }
   }
 }
-
 
 function getParentREC(node:TreeNode, root:TreeNode, parentList:TreeNode[]) {
   for(let i:number = 0;i<root.children.length;i++){
@@ -80,39 +73,24 @@ function whichTreeNodesContain(text:string, node:TreeNode): TreeNode[] {
 }
 
 //SETUP
-//let root:TreeNode = new TreeNode("korzen", false);
-//let note1:TreeNode = new TreeNode("notka1", false);
-//let note2:TreeNode = new TreeNode("notka2", false);
-//let note3:TreeNode = new TreeNode("notka3", false);
-//let note21:TreeNode = new TreeNode("notka1od2", false);
-//let note22:TreeNode = new TreeNode("notka2od2", false);
-//let note221:TreeNode = new TreeNode("notka1od22", false);
-//let note222:TreeNode = new TreeNode("notka2od22", false);
-//let note31: TreeNode = new TreeNode("notka1od3", false);
+let root:TreeNode = new TreeNode("korzen", false);
+let note1:TreeNode = new TreeNode("notka1", false);
+let note2:TreeNode = new TreeNode("notka2", false);
+let note3:TreeNode = new TreeNode("notka3", false);
+let note21:TreeNode = new TreeNode("notka1od2", false);
+let note22:TreeNode = new TreeNode("notka2od2", false);
+let note221:TreeNode = new TreeNode("notka1od22", false);
+let note222:TreeNode = new TreeNode("notka2od22", false);
+let note31:TreeNode = new TreeNode("notka1od3", false);
 
-// add(note1, root);
-// add(note2, root);
-// add(note3, root);
-// add(note21, note2);
-// add(note22, note2);
-// add(note221, note22);
-// add(note222, note22);
-// add(note31, note3);
-
-var testTree: Tree = [{data: "root", is_done: false}, [
-  [{ data: "notka1", is_done: true }, []],
-  [{ data: "notka2", is_done: false }, [
-    [{ data: "notka1od2", is_done: true }, []],
-    [{ data: "notka2od2", is_done: true }, [
-      [{ data: "notka1od22", is_done: true }, []],
-      [{ data: "notka2od22", is_done: true }, []]
-    ]]
-  ]],
-  [{ data: "notka3", is_done: true }, [
-    [{ data: "notka1od3", is_done: true }, []]
-  ]]
-]];
-
+root.add(note1);
+root.add(note2);
+root.add(note3);
+note2.add(note21);
+note2.add(note22);
+note22.add(note221);
+note22.add(note222);
+note3.add(note31);
 
 //TEST
 console.log(root);
@@ -127,15 +105,14 @@ let exampleParent: TreeNode = getParent(nodesWithString[0], root);
 console.log(exampleParent);
 console.log(exampleParent.data);
 
-remove(nodesWithString[0], exampleParent);
+exampleParent.remove(nodesWithString[0]);
 console.log(root);
 console.log(howManyTreeNodes(root));
 
 //rm node with string "notka3"
 let x: TreeNode[] = whichTreeNodesContain("notka3", root);
 console.log(x);
-let p: TreeNode = getParent(x[0], root);
-remove(x[0], p);
+getParent(x[0], root).remove(x[0]);
 
 console.log(root);
 console.log(howManyTreeNodes(root));

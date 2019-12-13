@@ -1,10 +1,8 @@
 class TreeNode {
-  readonly id: number;
   readonly data: string;
   readonly is_done: boolean;
   readonly children: TreeNode[];
-  constructor(id:number, data:string, is_done:boolean, children: TreeNode[] = []){
-    this.id = id;
+  constructor(data:string, is_done:boolean, children: TreeNode[] = []){
     this.data = data;
     this.is_done = is_done;
     this.children = children;
@@ -12,10 +10,10 @@ class TreeNode {
   add(node:TreeNode){
     this.children.push(node);
   }
-  remove(id: number) {
+  remove(node:TreeNode) {
   //remove node + any subtree
     for(let i:number = 0;i<this.children.length;i++){
-      if(this.children[i].id == id){
+      if(this.children[i] === node){
         this.children.splice(i, 1);
         break;
       }
@@ -63,15 +61,15 @@ function whichTreeNodesContain(text:string, node:TreeNode): TreeNode[] {
 }
 
 //SETUP
-let root:TreeNode = new TreeNode(0, "korzen", false);
-let note1:TreeNode = new TreeNode(1, "notka1", false);
-let note2:TreeNode = new TreeNode(2, "notka2", false);
-let note3:TreeNode = new TreeNode(3, "notka3", false);
-let note21:TreeNode = new TreeNode(4, "notka1od2", false);
-let note22:TreeNode = new TreeNode(5, "notka2od2", false);
-let note221:TreeNode = new TreeNode(6, "notka1od22", false);
-let note222:TreeNode = new TreeNode(7, "notka2od22", false);
-let note31:TreeNode = new TreeNode(8, "notka1od3", false);
+let root:TreeNode = new TreeNode("korzen", false);
+let note1:TreeNode = new TreeNode("notka1", false);
+let note2:TreeNode = new TreeNode("notka2", false);
+let note3:TreeNode = new TreeNode("notka3", false);
+let note21:TreeNode = new TreeNode("notka1od2", false);
+let note22:TreeNode = new TreeNode("notka2od2", false);
+let note221:TreeNode = new TreeNode("notka1od22", false);
+let note222:TreeNode = new TreeNode("notka2od22", false);
+let note31:TreeNode = new TreeNode("notka1od3", false);
 
 root.add(note1);
 root.add(note2);
@@ -88,22 +86,21 @@ console.log(howManyTreeNodes(root));
 
 let nodesWithString: TreeNode[] = whichTreeNodesContain("1od", root);
 for(let i in nodesWithString){
-  console.log(nodesWithString[i].id);
+  console.log(nodesWithString[i].data);
 }
 
 let exampleParent: TreeNode = getParent(nodesWithString[0], root);
 console.log(exampleParent);
 console.log(exampleParent.data);
 
-exampleParent.remove(4);
+exampleParent.remove(nodesWithString[0]);
 console.log(root);
 console.log(howManyTreeNodes(root));
 
 //rm node with string "notka3"
 let x: TreeNode[] = whichTreeNodesContain("notka3", root);
 console.log(x);
-let ajdi = x[0].id;
-getParent(x[0], root).remove(ajdi);
+getParent(x[0], root).remove(x[0]);
 
 console.log(root);
 console.log(howManyTreeNodes(root));

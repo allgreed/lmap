@@ -1,24 +1,8 @@
 import React from 'react';
 //import logo from './logo.svg';
 import './App.css';
-//import { Tree, Leaf } from './core/main.ts';
+import { URL, Name, Resource, Leaf, Tree } from './core/main';
 
-// TODO: fix it
-interface URL {
-    address: string;
-    is_done: boolean;
-}
-
-interface Name {
-    content: string;
-    is_done: boolean;
-}
-
-export type Resource = URL | Name;
-
-export type Leaf = null;
-export type Tree = Leaf | [Resource, Tree[]];
-// endTODO
 
 const ble: Tree = [{content: "elon", is_done: false}, [
     [{content: "mózg", is_done: true}, [

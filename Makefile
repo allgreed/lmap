@@ -19,6 +19,9 @@ lint: ## run static analysis
 	@echo "Not implemented"; false
 
 test: node_modules ## run all tests
+	CI=true $(REACT_APP_CMD) test
+
+iterate: ## run tests for TDD iteration
 	$(REACT_APP_CMD) test
 
 container: build ## create container

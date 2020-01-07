@@ -1,15 +1,25 @@
-import * from './tree_methods.ts'
+import * as tree from './tree_methods'
+
+var root;
+var note1;
+var note2;
+var note3;
+var note21;
+var note22;
+var note221;
+var note222;
+var note31;
 
 beforeEach(() => {
-  let root:TreeNode = new TreeNode("korzen", false);
-  let note1:TreeNode = new TreeNode("notka1", false);
-  let note2:TreeNode = new TreeNode("notka2", false);
-  let note3:TreeNode = new TreeNode("notka3", false);
-  let note21:TreeNode = new TreeNode("notka1od2", false);
-  let note22:TreeNode = new TreeNode("notka2od2", false);
-  let note221:TreeNode = new TreeNode("notka1od22", false);
-  let note222:TreeNode = new TreeNode("notka2od22", false);
-  let note31:TreeNode = new TreeNode("notka1od3", false);
+  root = new tree.TreeNode("korzen", false);
+  note1 = new tree.TreeNode("notka1", false);
+  note2 = new tree.TreeNode("notka2", false);
+  note3 = new tree.TreeNode("notka3", false);
+  note21 = new tree.TreeNode("notka1od2", false);
+  note22 = new tree.TreeNode("notka2od2", false);
+  note221 = new tree.TreeNode("notka1od22", false);
+  note222 = new tree.TreeNode("notka2od22", false);
+  note31 = new tree.TreeNode("notka1od3", false);
 
   root.add(note1);
   root.add(note2);
@@ -22,35 +32,37 @@ beforeEach(() => {
 });
 
 test("count tree nodes", () => {
-  expect(howManyTreeNodes(root)).toEqual(8);
+  expect(tree.howManyTreeNodes(root)).toEqual(8);
 });
 test("add node", () => {
-  node3.add(new TreeNode("notatka2od3", false));
-  expect(len(node3.children)).toEqual(2);
-  expect(howManyTreeNodes(root)).toEqual(9);
+  note3.add(new tree.TreeNode("notatka2od3", false));
+  expect(note3.children.length).toEqual(2);
+  expect(tree.howManyTreeNodes(root)).toEqual(9);
 });
 test("find node with string", () => {
-  let nodesWithString: TreeNode[] = whichTreeNodesContain("1od", root);
-  expect(len(nodesWithString)).toEqual(3);
+  let nodesWithString: TreeNode[] = tree.whichTreeNodesContain("1od", root);
+  expect(nodesWithString.length).toEqual(3);
   expect(nodesWithString[0].content).toEqual("notka1od2");
 });
 
 describe("manipulatiing one node", () => {
+  var firstNodeWithString;
   beforeEach(() => {
     //find a node with a string "1od"
-    let firstNodeWithString: string = whichTreeNodesContain("1od", root)[0];
+    firstNodeWithString = tree.whichTreeNodesContain("1od", root)[0];
   });
   test("find parent of a node", () => {
-    let exampleParent: TreeNode = getParent(firstNodeWithString, root);
+    let exampleParent: TreeNode = tree.getParent(firstNodeWithString, root);
     expect(exampleParent.content).toEqual("notka2");
   });
   test("remove node", () => {
-    let x: TreeNode[] = whichTreeNodesContain("2od2", root);
-    let parent: TreeNode = getParent(x[0], root)
-    parent.removeNode(x[0]);
-    expect(howManyTreeNodes(root)).toEqual(7);
-    expect(len(parent.children)).toEqual(3);
-    expect(parent.children[0].content).toEqual("notka1od22");
+    let x: TreeNode[] = tree.whichTreeNodesContain("2od2", root)[0];
+    let xChildren = x.children;
+    let parent: TreeNode = tree.getParent(x, root)
+    tree.getParent(x, root).removeNode(x);
+    expect(tree.howManyTreeNodes(root)).toEqual(7);
+    expect(parent.children.length).toEqual(3);
+    expect(parent.children).toEqual(expect.arrayContaining(xChildren));
   });
 });
 

@@ -1,4 +1,4 @@
-class TreeNode {
+export class TreeNode {
   readonly content: string;
   readonly is_done: boolean;
   readonly children: TreeNode[];
@@ -36,7 +36,7 @@ class TreeNode {
   }
 }
 
-function getParentREC(node:TreeNode, root:TreeNode, parentList:TreeNode[]) {
+export function getParentREC(node:TreeNode, root:TreeNode, parentList:TreeNode[]) {
   for(let i:number = 0; i < root.children.length; i++){
     if(root.children[i] == node){
       parentList.push(root);
@@ -46,13 +46,13 @@ function getParentREC(node:TreeNode, root:TreeNode, parentList:TreeNode[]) {
   }
 }
 
-function getParent(node: TreeNode, root: TreeNode):TreeNode {
+export function getParent(node: TreeNode, root: TreeNode):TreeNode {
   let parent: TreeNode[] = [];
   getParentREC(node, root, parent);
   return parent[0];
 }
 
-function howManyTreeNodes(root:TreeNode):number {
+export function howManyTreeNodes(root:TreeNode):number {
   let no:number = root.children.length;
   root.children.forEach(function(child){
     no += howManyTreeNodes(child);
@@ -60,7 +60,7 @@ function howManyTreeNodes(root:TreeNode):number {
   return no;
 }
 
-function whichTreeNodesContainREC(text:string, root:TreeNode, results: TreeNode[]){
+export function whichTreeNodesContainREC(text:string, root:TreeNode, results: TreeNode[]){
   root.children.forEach(function(child){
     if(child.content.includes(text)){
       results.push(child);
@@ -69,10 +69,8 @@ function whichTreeNodesContainREC(text:string, root:TreeNode, results: TreeNode[
   });
 }
 
-function whichTreeNodesContain(text:string, root:TreeNode): TreeNode[] {
+export function whichTreeNodesContain(text:string, root:TreeNode): TreeNode[] {
   let searchResults: TreeNode[] = [];
   whichTreeNodesContainREC(text, root, searchResults);
   return searchResults;
 }
-
-export default {};

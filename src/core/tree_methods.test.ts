@@ -1,14 +1,14 @@
 import * as tree from './tree_methods'
 
-var root;
-var note1;
-var note2;
-var note3;
-var note21;
-var note22;
-var note221;
-var note222;
-var note31;
+let root;
+let note1;
+let note2;
+let note3;
+let note21;
+let note22;
+let note221;
+let note222;
+let note31;
 
 beforeEach(() => {
   root = new tree.TreeNode("korzen", false);
@@ -46,7 +46,7 @@ test("find node with string", () => {
 });
 
 describe("manipulatiing one node", () => {
-  var firstNodeWithString;
+  let firstNodeWithString;
   beforeEach(() => {
     //find a node with a string "1od"
     firstNodeWithString = tree.whichTreeNodesContain("1od", root)[0];

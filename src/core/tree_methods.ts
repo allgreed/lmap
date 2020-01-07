@@ -74,3 +74,5 @@ function whichTreeNodesContain(text:string, root:TreeNode): TreeNode[] {
   whichTreeNodesContainREC(text, root, searchResults);
   return searchResults;
 }
+
+export default {};

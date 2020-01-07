@@ -1,4 +1,4 @@
-import { TreeNode } from './'
+import * from './tree_methods.ts'
 
 beforeEach(() => {
   let root:TreeNode = new TreeNode("korzen", false);

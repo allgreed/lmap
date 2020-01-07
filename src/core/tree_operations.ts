@@ -1,12 +1,13 @@
 class TreeNode {
-  readonly data: string;
+  readonly content: string;
   readonly is_done: boolean;
   readonly children: TreeNode[];
-  constructor(data:string, is_done:boolean, children: TreeNode[] = []){
-    this.data = data;
+  constructor(content:string, is_done:boolean, children: TreeNode[] = []){
+    this.content = content;
     this.is_done = is_done;
     this.children = children;
   }
+  //TODO: to nonmutable
   add(node:TreeNode){
     this.children.push(node);
   }
@@ -19,11 +20,13 @@ class TreeNode {
       }
     }
   }
+
+  //TODO: to nonmutable
   removeNode(node:TreeNode) {
   //remove node + attach its any Children to this.
-    for(let i:number = 0;i<this.children.length;i++){
+    for(let i:number = 0;i < this.children.length; i++){
       if (this.children[i] === node) {
-        for (let j: number = 0; j < this.children[i].children.length; j++) {
+        for (let j:number = 0; j < this.children[i].children.length; j++) {
           this.add(this.children[i].children[j]);
         }
         this.children.splice(i, 1);
@@ -34,7 +37,7 @@ class TreeNode {
 }
 
 function getParentREC(node:TreeNode, root:TreeNode, parentList:TreeNode[]) {
-  for(let i:number = 0;i<root.children.length;i++){
+  for(let i:number = 0; i < root.children.length; i++){
     if(root.children[i] == node){
       parentList.push(root);
     }
@@ -43,78 +46,31 @@ function getParentREC(node:TreeNode, root:TreeNode, parentList:TreeNode[]) {
   }
 }
 
-function getParent(node: TreeNode, rootNode: TreeNode): TreeNode {
+function getParent(node: TreeNode, root: TreeNode):TreeNode {
   let parent: TreeNode[] = [];
-  getParentREC(node, rootNode, parent);
+  getParentREC(node, root, parent);
   return parent[0];
 }
 
-function howManyTreeNodes(node:TreeNode):number {
-  let no:number = node.children.length;
-  node.children.forEach(function(child){
+function howManyTreeNodes(root:TreeNode):number {
+  let no:number = root.children.length;
+  root.children.forEach(function(child){
     no += howManyTreeNodes(child);
   });
   return no;
 }
 
-function whichTreeNodesContainREC(text:string, node:TreeNode, results: TreeNode[]){
-  node.children.forEach(function(child){
-    if(child.data.includes(text)){
+function whichTreeNodesContainREC(text:string, root:TreeNode, results: TreeNode[]){
+  root.children.forEach(function(child){
+    if(child.content.includes(text)){
       results.push(child);
     }
     whichTreeNodesContainREC(text, child, results);
   });
 }
 
-function whichTreeNodesContain(text:string, node:TreeNode): TreeNode[] {
+function whichTreeNodesContain(text:string, root:TreeNode): TreeNode[] {
   let searchResults: TreeNode[] = [];
-  whichTreeNodesContainREC(text, node, searchResults);
+  whichTreeNodesContainREC(text, root, searchResults);
   return searchResults;
 }
-
-//SETUP
-let root:TreeNode = new TreeNode("korzen", false);
-let note1:TreeNode = new TreeNode("notka1", false);
-let note2:TreeNode = new TreeNode("notka2", false);
-let note3:TreeNode = new TreeNode("notka3", false);
-let note21:TreeNode = new TreeNode("notka1od2", false);
-let note22:TreeNode = new TreeNode("notka2od2", false);
-let note221:TreeNode = new TreeNode("notka1od22", false);
-let note222:TreeNode = new TreeNode("notka2od22", false);
-let note31:TreeNode = new TreeNode("notka1od3", false);
-
-root.add(note1);
-root.add(note2);
-root.add(note3);
-note2.add(note21);
-note2.add(note22);
-note22.add(note221);
-note22.add(note222);
-note3.add(note31);
-
-//TEST
-console.log(root);
-console.log(howManyTreeNodes(root));
-
-let nodesWithString: TreeNode[] = whichTreeNodesContain("1od", root);
-for(let i in nodesWithString){
-  console.log(nodesWithString[i].data);
-}
-
-let exampleParent: TreeNode = getParent(nodesWithString[0], root);
-console.log(exampleParent);
-console.log(exampleParent.data);
-
-exampleParent.remove(nodesWithString[0]);
-console.log(root);
-console.log(howManyTreeNodes(root));
-
-//rm node with string "notka3"
-let x: TreeNode[] = whichTreeNodesContain("notka3", root);
-console.log(x);
-getParent(x[0], root).remove(x[0]);
-
-console.log(root);
-console.log(howManyTreeNodes(root));
-
-export default {};

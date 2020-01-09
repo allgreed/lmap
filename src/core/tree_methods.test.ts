@@ -1,34 +1,29 @@
 import * as tree from './tree_methods'
+const clonedeep = require('lodash.clonedeep')
 
 let root;
-let note1;
-let note2;
-let note3;
-let note21;
-let note22;
-let note221;
-let note222;
-let note31;
+
+root = new tree.TreeNode("korzen", false);
+let note1 = new tree.TreeNode("notka1", false);
+let note2 = new tree.TreeNode("notka2", false);
+let note3 = new tree.TreeNode("notka3", false);
+let note21 = new tree.TreeNode("notka1od2", false);
+let note22 = new tree.TreeNode("notka2od2", false);
+let note221 = new tree.TreeNode("notka1od22", false);
+let note222 = new tree.TreeNode("notka2od22", false);
+let note31 = new tree.TreeNode("notka1od3", false);
+
+root.add(note1);
+root.add(note2);
+root.add(note3);
+note2.add(note21);
+note2.add(note22);
+note22.add(note221);
+note22.add(note222);
+note3.add(note31);
 
 beforeEach(() => {
-  root = new tree.TreeNode("korzen", false);
-  note1 = new tree.TreeNode("notka1", false);
-  note2 = new tree.TreeNode("notka2", false);
-  note3 = new tree.TreeNode("notka3", false);
-  note21 = new tree.TreeNode("notka1od2", false);
-  note22 = new tree.TreeNode("notka2od2", false);
-  note221 = new tree.TreeNode("notka1od22", false);
-  note222 = new tree.TreeNode("notka2od22", false);
-  note31 = new tree.TreeNode("notka1od3", false);
-
-  root.add(note1);
-  root.add(note2);
-  root.add(note3);
-  note2.add(note21);
-  note2.add(note22);
-  note22.add(note221);
-  note22.add(note222);
-  note3.add(note31);
+  root = clonedeep(root)
 });
 
 test("count tree nodes", () => {
@@ -36,7 +31,7 @@ test("count tree nodes", () => {
 });
 test("add node", () => {
   note3.add(new tree.TreeNode("notatka2od3", false));
-  expect(note3.children.length).toEqual(2);
+  expect(note3.children.filter(child => (child.content === "notatka2od3"))).toEqual(true);
   expect(tree.howManyTreeNodes(root)).toEqual(9);
 });
 test("find node with string", () => {

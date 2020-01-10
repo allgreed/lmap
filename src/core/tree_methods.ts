@@ -16,6 +16,7 @@ export class TreeNode {
   //TODO: to nonmutable
   add(node:TreeNode){
     this.children.push(node);
+    return this;
   }
   remove(node:TreeNode) {
   //remove node + any subtree

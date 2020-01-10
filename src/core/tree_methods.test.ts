@@ -1,9 +1,9 @@
 import * as tree from './tree_methods'
-const clonedeep = require('lodash.clonedeep')
+import * as _ from 'lodash'
 
 let root;
 
-root = new tree.TreeNode("korzen", false);
+let treeRoot = new tree.TreeNode("korzen", false);
 let note1 = new tree.TreeNode("notka1", false);
 let note2 = new tree.TreeNode("notka2", false);
 let note3 = new tree.TreeNode("notka3", false);
@@ -13,9 +13,9 @@ let note221 = new tree.TreeNode("notka1od22", false);
 let note222 = new tree.TreeNode("notka2od22", false);
 let note31 = new tree.TreeNode("notka1od3", false);
 
-root.add(note1);
-root.add(note2);
-root.add(note3);
+treeRoot.add(note1);
+treeRoot.add(note2);
+treeRoot.add(note3);
 note2.add(note21);
 note2.add(note22);
 note22.add(note221);
@@ -23,15 +23,18 @@ note22.add(note222);
 note3.add(note31);
 
 beforeEach(() => {
-  root = clonedeep(root)
+  root = _.cloneDeep(treeRoot)
 });
 
 test("count tree nodes", () => {
   expect(tree.howManyTreeNodes(root)).toEqual(8);
 });
 test("add node", () => {
-  note3.add(new tree.TreeNode("notatka2od3", false));
-  expect(note3.children.filter(child => (child.content === "notatka2od3"))).toEqual(true);
+  //expect(root.children.filter(child => child.content === "notka3")[0]).toEqual(true);
+  let node = root.children.filter(child => child.content === "notka3")[0]
+  node.add(new tree.TreeNode("notatka2od3", false));
+  //expect(node).toEqual(true);
+  expect(node.children.some(child => (child.content === "notatka2od3"))).toEqual(true);
   expect(tree.howManyTreeNodes(root)).toEqual(9);
 });
 test("find node with string", () => {
@@ -43,6 +46,7 @@ test("find node with string", () => {
 describe("manipulatiing one node", () => {
   let firstNodeWithString;
   beforeEach(() => {
+    //root = _.cloneDeep(treeRoot)
     //find a node with a string "1od"
     firstNodeWithString = tree.whichTreeNodesContain("1od", root)[0];
   });
@@ -61,26 +65,6 @@ describe("manipulatiing one node", () => {
   });
 });
 
-// //SETUP
-// let root:TreeNode = new TreeNode("korzen", false);
-// let note1:TreeNode = new TreeNode("notka1", false);
-// let note2:TreeNode = new TreeNode("notka2", false);
-// let note3:TreeNode = new TreeNode("notka3", false);
-// let note21:TreeNode = new TreeNode("notka1od2", false);
-// let note22:TreeNode = new TreeNode("notka2od2", false);
-// let note221:TreeNode = new TreeNode("notka1od22", false);
-// let note222:TreeNode = new TreeNode("notka2od22", false);
-// let note31:TreeNode = new TreeNode("notka1od3", false);
-//
-// root.add(note1);
-// root.add(note2);
-// root.add(note3);
-// note2.add(note21);
-// note2.add(note22);
-// note22.add(note221);
-// note22.add(note222);
-// note3.add(note31);
-
 // //future SETUP for immutable add,remove fns
 // let root:TreeNode = {content: "korzen", is_done: false, children: [
 //   {content: "notka1", is_done: false, children: []},
@@ -95,31 +79,3 @@ describe("manipulatiing one node", () => {
 //     {content: "notka1od3", is_done: false, children: []}
 //   ]}
 // ]};
-
-
-// //TEST
-// console.log(root);
-// console.log(howManyTreeNodes(root));
-//
-// let nodesWithString: TreeNode[] = whichTreeNodesContain("1od", root);
-// for(let i in nodesWithString){
-//   console.log(nodesWithString[i].content);
-// }
-//
-// let exampleParent: TreeNode = getParent(nodesWithString[0], root);
-// console.log(exampleParent);
-// console.log(exampleParent.content);
-//
-// exampleParent.removeNode(nodesWithString[0]);
-// console.log(root);
-// console.log(howManyTreeNodes(root));
-//
-// //rm node with string "notka3"
-// let x: TreeNode[] = whichTreeNodesContain("notka3", root);
-// console.log(x);
-// getParent(x[0], root).removeNode(x[0]);
-//
-// console.log(root);
-// console.log(howManyTreeNodes(root));
-//
-// export default {};

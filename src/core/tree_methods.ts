@@ -1,11 +1,17 @@
+import * as _ from 'lodash'
+
 export class TreeNode {
   readonly content: string;
   readonly is_done: boolean;
   readonly children: TreeNode[];
-  constructor(content:string, is_done:boolean, children: TreeNode[] = []){
+
+  constructor(content:string, is_done:boolean = false, children: TreeNode[] = []){
     this.content = content;
     this.is_done = is_done;
     this.children = children;
+  }
+  setIs_done(is_done) {
+    this.is_done = is_done;
   }
   //TODO: to nonmutable
   add(node:TreeNode){
@@ -20,7 +26,6 @@ export class TreeNode {
       }
     }
   }
-
   //TODO: to nonmutable
   removeNode(node:TreeNode) {
   //remove node + attach its any Children to this.
@@ -33,6 +38,9 @@ export class TreeNode {
         break;
       }
     }
+  }
+  clone() {
+    return _.cloneDeep(this);
   }
 }
 

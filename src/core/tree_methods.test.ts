@@ -1,17 +1,16 @@
 import * as tree from './tree_methods'
-import * as _ from 'lodash'
 
 let root;
 
-let treeRoot = new tree.TreeNode("korzen", false);
-let note1 = new tree.TreeNode("notka1", false);
-let note2 = new tree.TreeNode("notka2", false);
-let note3 = new tree.TreeNode("notka3", false);
-let note21 = new tree.TreeNode("notka1od2", false);
-let note22 = new tree.TreeNode("notka2od2", false);
-let note221 = new tree.TreeNode("notka1od22", false);
-let note222 = new tree.TreeNode("notka2od22", false);
-let note31 = new tree.TreeNode("notka1od3", false);
+let treeRoot = new tree.TreeNode("korzen");
+let note1 = new tree.TreeNode("notka1");
+let note2 = new tree.TreeNode("notka2");
+let note3 = new tree.TreeNode("notka3");
+let note21 = new tree.TreeNode("notka1od2");
+let note22 = new tree.TreeNode("notka2od2");
+let note221 = new tree.TreeNode("notka1od22");
+let note222 = new tree.TreeNode("notka2od22");
+let note31 = new tree.TreeNode("notka1od3");
 
 treeRoot.add(note1);
 treeRoot.add(note2);
@@ -23,7 +22,7 @@ note22.add(note222);
 note3.add(note31);
 
 beforeEach(() => {
-  root = _.cloneDeep(treeRoot)
+  root = treeRoot.clone();
 });
 
 test("count tree nodes", () => {
@@ -31,7 +30,7 @@ test("count tree nodes", () => {
 });
 test("add node", () => {
   let node = root.children.filter(child => (child.content === "notka3"))[0]
-  node.add(new tree.TreeNode("notatka2od3", false));
+  node.add(new tree.TreeNode("notatka2od3"));
   expect(node.children.some(child => (child.content === "notatka2od3"))).toEqual(true);
   expect(tree.howManyTreeNodes(root)).toEqual(9);
 });
@@ -42,9 +41,17 @@ test("find node with string", () => {
 
 describe("manipulatiing one node", () => {
   let firstNodeWithString;
+
   beforeEach(() => {
-    //find a node with a string "1od"
     firstNodeWithString = tree.whichTreeNodesContain("1od", root)[0];
+  });
+  test("tick done", () => {
+    firstNodeWithString.setIs_done(true);
+    expect(firstNodeWithString.is_done).toEqual(true);
+  });
+  test("tick undone", () => {
+    firstNodeWithString.setIs_done(false);
+    expect(firstNodeWithString.is_done).toEqual(false);
   });
   test("find parent of a node", () => {
     let exampleParent: TreeNode = tree.getParent(firstNodeWithString, root);

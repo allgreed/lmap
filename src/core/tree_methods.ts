@@ -1,9 +1,9 @@
 import * as _ from 'lodash'
 
-export class TreeNode {
-  readonly content: string;
-  readonly is_done: boolean;
-  readonly children: TreeNode[];
+export class TreeNode<T, B, A> {
+  content: T;
+  is_done: B;
+  children: A[];
 
   constructor(content:string, is_done:boolean = false, children: TreeNode[] = []){
     this.content = content;

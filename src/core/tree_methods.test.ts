@@ -32,20 +32,6 @@ test("find node with string", () => {
 });
 
 describe("manipulatiing one node", () => {
-  test("tick done", () => {
-    let root = treeRoot.clone();
-    let exampleNode = tree.whichTreeNodesContain("1od", root)[0];
-    exampleNode.setIs_done(true);
-    expect(exampleNode.is_done).toEqual(true);
-  });
-
-  test("tick undone", () => {
-    let root = treeRoot.clone();
-    let exampleNode = tree.whichTreeNodesContain("1od", root)[0];
-    exampleNode.setIs_done(false);
-    expect(exampleNode.is_done).toEqual(false);
-  });
-
   test("find parent of a node", () => {
     let root = treeRoot.clone();
     let exampleNode = tree.whichTreeNodesContain("1od", root)[0];

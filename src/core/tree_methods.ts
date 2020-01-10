@@ -1,17 +1,12 @@
 import * as _ from 'lodash'
 
-export class TreeNode<T, B, A> {
+export class TreeNode<T, A, B> {
   content: T;
-  is_done: B;
-  children: A[];
+  children: B;
 
-  constructor(content:string, is_done:boolean = false, children: TreeNode[] = []){
+  constructor(content:string, children: TreeNode[] = []){
     this.content = content;
-    this.is_done = is_done;
     this.children = children;
-  }
-  setIs_done(is_done) {
-    this.is_done = is_done;
   }
   //TODO: to nonmutable
   add(node:TreeNode){

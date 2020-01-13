@@ -2,24 +2,20 @@ import * as _ from 'lodash'
 
 export class TreeNode<T> {
   content: T;
-  children: T[];
+  children: TreeNode<T>[];
 
-  constructor(TCreator: { new(): T;}, TCreator2: { new(): T[];}) {
-    this.content = new TCreator();
-    this.children = new TCreator2()
+  constructor(content: T, children: TreeNode<T>[] = []) {
+    this.content = content;
+    this.children = children;
   }
-  // constructor(content:string, children: TreeNode[] = []){
-  //   this.content = content;
-  //   this.children = children;
-  // }
   //TODO: to nonmutable
-  add(node:TreeNode){
+  add(node: TreeNode<T>): TreeNode<T> {
     this.children.push(node);
     return this;
   }
-  remove(node:TreeNode) {
+  remove(node: TreeNode<T>) {
   //remove node + any subtree
-    for(let i:number = 0;i<this.children.length;i++){
+    for(let i: number = 0;i<this.children.length;i++){
       if(this.children[i] === node){
         this.children.splice(i, 1);
         break;
@@ -27,11 +23,11 @@ export class TreeNode<T> {
     }
   }
   //TODO: to nonmutable
-  removeNode(node:TreeNode) {
+  removeNode(node: TreeNode<T>) {
   //remove node + attach its any Children to this.
-    for(let i:number = 0;i < this.children.length; i++){
+    for(let i: number = 0;i < this.children.length; i++){
       if (this.children[i] === node) {
-        for (let j:number = 0; j < this.children[i].children.length; j++) {
+        for (let j: number = 0; j < this.children[i].children.length; j++) {
           this.add(this.children[i].children[j]);
         }
         this.children.splice(i, 1);
@@ -44,31 +40,30 @@ export class TreeNode<T> {
   }
 }
 
-export function getParentREC(node:TreeNode, root:TreeNode, parentList:TreeNode[]) {
-  for(let i:number = 0; i < root.children.length; i++){
+export function getParentREC(node: TreeNode<T>, root: TreeNode<T>, parentList: TreeNode<T>[]) {
+  for(let i: number = 0; i < root.children.length; i++){
     if(root.children[i] == node){
       parentList.push(root);
     }
     getParentREC(node, root.children[i], parentList);
-
   }
 }
 
-export function getParent(node: TreeNode, root: TreeNode):TreeNode {
-  let parent: TreeNode[] = [];
+export function getParent(node: TreeNode<T>, root: TreeNode<T>): TreeNode<T> {
+  let parent: TreeNode<T>[] = [];
   getParentREC(node, root, parent);
   return parent[0];
 }
 
-export function howManyTreeNodes(root:TreeNode):number {
-  let no:number = root.children.length;
+export function howManyTreeNodes(root: TreeNode<T>): number {
+  let no: number = root.children.length;
   root.children.forEach(function(child){
     no += howManyTreeNodes(child);
   });
   return no;
 }
 
-export function whichTreeNodesContainREC(text:string, root:TreeNode, results: TreeNode[]){
+export function whichTreeNodesContainREC(text: string, root: TreeNode<T>, results: TreeNode<T>[]){
   root.children.forEach(function(child){
     if(child.content.includes(text)){
       results.push(child);
@@ -77,8 +72,8 @@ export function whichTreeNodesContainREC(text:string, root:TreeNode, results: Tr
   });
 }
 
-export function whichTreeNodesContain(text:string, root:TreeNode): TreeNode[] {
-  let searchResults: TreeNode[] = [];
+export function whichTreeNodesContain(text: string, root: TreeNode<T>): TreeNode<T>[] {
+  let searchResults: TreeNode<T>[] = [];
   whichTreeNodesContainREC(text, root, searchResults);
   return searchResults;
 }

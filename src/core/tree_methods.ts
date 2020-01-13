@@ -76,18 +76,18 @@ export function howManyTreeNodes<T>(root: TreeNode<T>): number {
 //   });
 // }
 
-export function whichTreeNodesContainREC<T>(f: T => boolean, root: TreeNode<T>, results: TreeNode<T>[]){
+export function whichTreeNodesContainREC<T>(f: (T) => boolean, root: TreeNode<T>, results: TreeNode<T>[]){
   root.children.forEach(function(child){
     if(f()){
       results.push(child);
     }
 
-    whichTreeNodesContainREC(f(), child, results);
+    whichTreeNodesContainREC(f, child, results);
   });
 }
 
-export function whichTreeNodesContain<T>(f: T => boolean, root: TreeNode<T>): TreeNode<T>[] {
+export function whichTreeNodesContain<T>(f: (T) => boolean, root: TreeNode<T>): TreeNode<T>[] {
   let searchResults: TreeNode<T>[] = [];
-  whichTreeNodesContainREC(f(), root, searchResults);
+  whichTreeNodesContainREC(f, root, searchResults);
   return searchResults;
 }

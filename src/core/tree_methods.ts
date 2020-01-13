@@ -1,5 +1,10 @@
 import * as _ from 'lodash'
 
+// interface Content {
+//   content: string;
+//   is_done: boolean;
+// }
+
 export class TreeNode<T> {
   content: T;
   children: TreeNode<T>[];
@@ -38,7 +43,7 @@ export class TreeNode<T> {
   }
 }
 
-export function getParentREC(node: TreeNode<T>, root: TreeNode<T>, parentList: TreeNode<T>[]) {
+export function getParentREC<T>(node: TreeNode<T>, root: TreeNode<T>, parentList: TreeNode<T>[]) {
   root.children.forEach((child) => {
     if(child == node){
       parentList.push(root);
@@ -47,13 +52,13 @@ export function getParentREC(node: TreeNode<T>, root: TreeNode<T>, parentList: T
   });
 }
 
-export function getParent(node: TreeNode<T>, root: TreeNode<T>): TreeNode<T> {
+export function getParent<T>(node: TreeNode<T>, root: TreeNode<T>): TreeNode<T> {
   let parent: TreeNode<T>[] = [];
   getParentREC(node, root, parent);
   return parent[0];
 }
 
-export function howManyTreeNodes(root: TreeNode<T>): number {
+export function howManyTreeNodes<T>(root: TreeNode<T>): number {
   let no: number = root.children.length;
   root.children.forEach(function(child){
     no += howManyTreeNodes(child);
@@ -61,17 +66,28 @@ export function howManyTreeNodes(root: TreeNode<T>): number {
   return no;
 }
 
-export function whichTreeNodesContainREC(text: string, root: TreeNode<T>, results: TreeNode<T>[]){
+// export function whichTreeNodesContainREC<T>(text: string, root: TreeNode<T>, results: TreeNode<T>[]){
+//   root.children.forEach(function(child){
+//     if(child.content.includes(text)){
+//       results.push(child);
+//     }
+//
+//     whichTreeNodesContainREC(text, child, results);
+//   });
+// }
+
+export function whichTreeNodesContainREC<T>(f: T => boolean, root: TreeNode<T>, results: TreeNode<T>[]){
   root.children.forEach(function(child){
-    if(child.content.includes(text)){
+    if(f()){
       results.push(child);
     }
-    whichTreeNodesContainREC(text, child, results);
+
+    whichTreeNodesContainREC(f(), child, results);
   });
 }
 
-export function whichTreeNodesContain(text: string, root: TreeNode<T>): TreeNode<T>[] {
+export function whichTreeNodesContain<T>(f: T => boolean, root: TreeNode<T>): TreeNode<T>[] {
   let searchResults: TreeNode<T>[] = [];
-  whichTreeNodesContainREC(text, root, searchResults);
+  whichTreeNodesContainREC(f(), root, searchResults);
   return searchResults;
 }

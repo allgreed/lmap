@@ -13,27 +13,25 @@ export class TreeNode<T> {
     this.children.push(node);
     return this;
   }
-  remove(node: TreeNode<T>) {
-  //remove node + any subtree
-    for(let i: number = 0;i<this.children.length;i++){
-      if(this.children[i] === node){
-        this.children.splice(i, 1);
-        break;
-      }
-    }
+  removeTree(node: TreeNode<T>) {
+  //remove node with children
+    let  chosenChildIndex = node.children.findIndex(child => child === node);
+    this.children.splice(chosenChildIndex, 1);
   }
   //TODO: to nonmutable
-  removeNode(node: TreeNode<T>) {
-  //remove node + attach its any Children to this.
-    for(let i: number = 0;i < this.children.length; i++){
-      if (this.children[i] === node) {
-        for (let j: number = 0; j < this.children[i].children.length; j++) {
-          this.add(this.children[i].children[j]);
-        }
-        this.children.splice(i, 1);
-        break;
-      }
+  removeNode(node: TreeNode<T>): number {
+  //remove node and attach its any children to this.
+  //return -1 if node doesnt exist
+    let  chosenChild = this.children.find(child => child == node);
+    if (chosenChild != undefined) {
+      let  chosenChildIndex = this.children.indexOf(chosenChild);
+      chosenChild.children.forEach(grandChild => this.add(grandChild));
+      this.children.splice(chosenChildIndex, 1);
+      return 0;
+    }else {
+      return -1;
     }
+
   }
   clone() {
     return _.cloneDeep(this);
@@ -41,12 +39,12 @@ export class TreeNode<T> {
 }
 
 export function getParentREC(node: TreeNode<T>, root: TreeNode<T>, parentList: TreeNode<T>[]) {
-  for(let i: number = 0; i < root.children.length; i++){
-    if(root.children[i] == node){
+  root.children.forEach((child) => {
+    if(child == node){
       parentList.push(root);
     }
-    getParentREC(node, root.children[i], parentList);
-  }
+    getParentREC(node, child, parentList);
+  });
 }
 
 export function getParent(node: TreeNode<T>, root: TreeNode<T>): TreeNode<T> {

@@ -45,7 +45,7 @@ export class TreeNode<T> {
 
 export function getParentREC<T>(node: TreeNode<T>, root: TreeNode<T>, parentList: TreeNode<T>[]) {
   root.children.forEach((child) => {
-    if(child == node){
+    if (child == node) {
       parentList.push(root);
     }
     getParentREC(node, child, parentList);
@@ -76,9 +76,9 @@ export function howManyTreeNodes<T>(root: TreeNode<T>): number {
 //   });
 // }
 
-export function whichTreeNodesContainREC<T>(f: (T) => boolean, root: TreeNode<T>, results: TreeNode<T>[]){
+export function whichTreeNodesContainREC<T>(f: (arg: TreeNode<T>) => boolean, root: TreeNode<T>, results: TreeNode<T>[]){
   root.children.forEach(function(child){
-    if(f()){
+    if (f(child)) {
       results.push(child);
     }
 
@@ -86,7 +86,7 @@ export function whichTreeNodesContainREC<T>(f: (T) => boolean, root: TreeNode<T>
   });
 }
 
-export function whichTreeNodesContain<T>(f: (T) => boolean, root: TreeNode<T>): TreeNode<T>[] {
+export function whichTreeNodesContain<T>(f: (arg: TreeNode<T>) => boolean, root: TreeNode<T>): TreeNode<T>[] {
   let searchResults: TreeNode<T>[] = [];
   whichTreeNodesContainREC(f, root, searchResults);
   return searchResults;

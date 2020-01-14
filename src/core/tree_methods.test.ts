@@ -27,22 +27,22 @@ test("add node", () => {
 
 test("find node with string", () => {
   let root = treeRoot.clone();
-  let nodesWithString: TreeNode[] = tree.whichTreeNodesContain(() => "1od".includes("1od"), root);
+  let nodesWithString: TreeNode[] = tree.whichTreeNodesContain((child) => child.content.includes("1od"), root);
   expect(nodesWithString.every(obj => obj.content.includes("1od"))).toEqual(true);
 });
 
 describe("manipulatiing one node", () => {
   test("find parent of a node", () => {
     let root = treeRoot.clone();
-    let exampleNode = tree.whichTreeNodesContain(() => "1od".includes("1od"), root)[0];
+    let exampleNode = tree.whichTreeNodesContain((child) => child.content.includes("1od"), root)[0];
     let exampleParent = tree.getParent(exampleNode, root);
     expect(exampleParent.content).toEqual("notka2");
   });
 
   test("remove node", () => {
     let root = treeRoot.clone();
-    let exampleNode = tree.whichTreeNodesContain(() => "1od".includes("1od"), root)[0];
-    let x: TreeNode[] = tree.whichTreeNodesContain(() => "2od2".includes("2od2"), root)[0];
+    let exampleNode = tree.whichTreeNodesContain((child) => child.content.includes("1od"), root)[0];
+    let x: TreeNode[] = tree.whichTreeNodesContain((child) => child.content.includes("2od2"), root)[0];
     let xChildren = x.children;
     let parent: TreeNode = tree.getParent(x, root)
     tree.getParent(x, root).removeNode(x);

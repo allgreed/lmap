@@ -27,21 +27,21 @@ test("add node", () => {
 
 test("find node with string", () => {
   let root = treeRoot.clone();
-  let nodesWithString: TreeNode[] = tree.whichTreeNodesContain((child) => child.data.includes("1od"), root);
+  let nodesWithString: TreeNode[] = root.filter((child) => child.data.includes("1od"));
   expect(nodesWithString.every(obj => obj.data.includes("1od"))).toEqual(true);
 });
 
 test("find parent of a node", () => {
   let root = treeRoot.clone();
-  let exampleNode = tree.whichTreeNodesContain((child) => child.data.includes("1od"), root)[0];
+  let exampleNode = root.filter((child) => child.data.includes("1od"))[0];
   let exampleParent = tree.getParent(exampleNode, root);
   expect(exampleParent.data).toEqual("notka2");
 });
 
 test("remove node", () => {
   let root = treeRoot.clone();
-  let exampleNode = tree.whichTreeNodesContain((child) => child.data.includes("1od"), root)[0];
-  let x: TreeNode[] = tree.whichTreeNodesContain((child) => child.data.includes("2od2"), root)[0];
+  let exampleNode = root.filter((child) => child.data.includes("1od"))[0];
+  let x: TreeNode[] = root.filter((child) => child.data.includes("2od2"))[0];
   let xChildren = x.children;
   let parent: TreeNode = tree.getParent(x, root)
   tree.getParent(x, root).removeNode(x);

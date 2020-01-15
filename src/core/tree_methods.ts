@@ -34,6 +34,21 @@ export class TreeNode<T> {
   clone() {
     return _.cloneDeep(this);
   }
+  filterREC<T>(f: (arg: TreeNode<T>) => boolean, results: TreeNode<T>[]){
+  //for filter()
+    this.children.forEach(function(child){
+      if (f(child)) {
+        results.push(child);
+      }
+      child.filterREC(f, results);
+    });
+  }
+  filter<T>(f: (arg: TreeNode<T>) => boolean): TreeNode<T>[] {
+  //for root obj
+    let searchResults: TreeNode<T>[] = [];
+    this.filterREC(f, searchResults);
+    return searchResults;
+  }
 }
 
 export function getParentREC<T>(node: TreeNode<T>, root: TreeNode<T>, parentList: TreeNode<T>[]) {
@@ -57,19 +72,4 @@ export function howManyTreeNodes<T>(root: TreeNode<T>): number {
     no += howManyTreeNodes(child);
   });
   return no;
-}
-
-export function whichTreeNodesContainREC<T>(f: (arg: TreeNode<T>) => boolean, root: TreeNode<T>, results: TreeNode<T>[]){
-  root.children.forEach(function(child){
-    if (f(child)) {
-      results.push(child);
-    }
-    whichTreeNodesContainREC(f, child, results);
-  });
-}
-
-export function whichTreeNodesContain<T>(f: (arg: TreeNode<T>) => boolean, root: TreeNode<T>): TreeNode<T>[] {
-  let searchResults: TreeNode<T>[] = [];
-  whichTreeNodesContainREC(f, root, searchResults);
-  return searchResults;
 }

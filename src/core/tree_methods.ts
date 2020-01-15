@@ -1,19 +1,13 @@
 import * as _ from 'lodash'
 
-// interface Content {
-//   content: string;
-//   is_done: boolean;
-// }
-
 export class TreeNode<T> {
-  content: T;
+  data: T;
   children: TreeNode<T>[];
 
-  constructor(content: T, children: TreeNode<T>[] = []) {
-    this.content = content;
+  constructor(data: T, children: TreeNode<T>[] = []) {
+    this.data = data;
     this.children = children;
   }
-  //TODO: to nonmutable
   add(node: TreeNode<T>): TreeNode<T> {
     this.children.push(node);
     return this;
@@ -23,7 +17,6 @@ export class TreeNode<T> {
     let  chosenChildIndex = node.children.findIndex(child => child === node);
     this.children.splice(chosenChildIndex, 1);
   }
-  //TODO: to nonmutable
   removeNode(node: TreeNode<T>): number {
   //remove node and attach its any children to this.
   //return -1 if node doesnt exist
@@ -66,22 +59,11 @@ export function howManyTreeNodes<T>(root: TreeNode<T>): number {
   return no;
 }
 
-// export function whichTreeNodesContainREC<T>(text: string, root: TreeNode<T>, results: TreeNode<T>[]){
-//   root.children.forEach(function(child){
-//     if(child.content.includes(text)){
-//       results.push(child);
-//     }
-//
-//     whichTreeNodesContainREC(text, child, results);
-//   });
-// }
-
 export function whichTreeNodesContainREC<T>(f: (arg: TreeNode<T>) => boolean, root: TreeNode<T>, results: TreeNode<T>[]){
   root.children.forEach(function(child){
     if (f(child)) {
       results.push(child);
     }
-
     whichTreeNodesContainREC(f, child, results);
   });
 }

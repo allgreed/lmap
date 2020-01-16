@@ -34,7 +34,7 @@ export class TreeNode<T> {
   clone() {
     return _.cloneDeep(this);
   }
-  filterREC<T>(f: (arg: TreeNode<T>) => boolean, results: TreeNode<T>[]){
+  filterREC(f: (arg: TreeNode<T>) => boolean, results: TreeNode<T>[]){
   //for filter()
     this.children.forEach(function(child){
       if (f(child)) {
@@ -43,7 +43,7 @@ export class TreeNode<T> {
       child.filterREC(f, results);
     });
   }
-  filter<T>(f: (arg: TreeNode<T>) => boolean): TreeNode<T>[] {
+  filter(f: (arg: TreeNode<T>) => boolean): TreeNode<T>[] {
   //for root obj
     let searchResults: TreeNode<T>[] = [];
     this.filterREC(f, searchResults);

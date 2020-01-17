@@ -6,19 +6,20 @@ REACT_APP_CMD := npx react-scripts
 # ###############
 .PHONY: env-up env-down env-recreate ci lint test container
 
-serve: ## run development server
+serve: setup ## run development server
 	$(REACT_APP_CMD) start
 
-ci: node_modules lint test build push-container-image ## run all tests and build all artifacts
+
+ci: setup lint test build push-container-image ## run all tests and build all artifacts
 	@echo "Not implemented"; false
 
-build: node_modules src ## create artifact
+build: setup src ## create artifact
 	$(REACT_APP_CMD) build
 
 lint: ## run static analysis
 	@echo "Not implemented"; false
 
-test: node_modules ## run all tests
+test: setup ## run all tests
 	CI=true $(REACT_APP_CMD) test
 
 iterate: ## run tests for TDD iteration
@@ -33,7 +34,9 @@ init: ## one time setup
 
 # Plumbing
 # ###############
-.PHONY: push-container-image
+.PHONY: setup clean
+
+setup: node_modules
 
 node_modules: package.json yarn.lock
 	yarn

@@ -20,8 +20,8 @@ export class TreeNode<T> {
   removeNode(node: TreeNode<T>): number {
   //remove node and attach its any children to this.
   //return -1 if node doesnt exist
-    let  chosenChild = this.children.find(child => child == node);
-    if (chosenChild != undefined) {
+    let  chosenChild = this.children.find(child => child === node);
+    if (chosenChild !== undefined) {
       let  chosenChildIndex = this.children.indexOf(chosenChild);
       chosenChild.children.forEach(grandChild => this.add(grandChild));
       this.children.splice(chosenChildIndex, 1);
@@ -53,7 +53,7 @@ export class TreeNode<T> {
 
 export function getParentREC<T>(node: TreeNode<T>, root: TreeNode<T>, parentList: TreeNode<T>[]) {
   root.children.forEach((child) => {
-    if (child == node) {
+    if (child === node) {
       parentList.push(root);
     }
     getParentREC(node, child, parentList);

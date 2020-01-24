@@ -47,3 +47,8 @@ svg path.link {
 	stroke: #2593B8;
 	stroke-width: 1.5px;
 }
+
+/* TODO: delete this crap */
+.red {
+    color: red
+}

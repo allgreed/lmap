@@ -1,21 +1,10 @@
 import { URL, Name, Resource } from './core/main';
 import { TreeNode } from './core/tree_methods';
-import React from 'react';
+import React, { Component } from 'react';
 import './App.css';
 import 'react-tree-graph/dist/style.css';
 
 const Tree:any = require('react-tree-graph'); // missing external types, haxing it'!
-
-
-let ourTree = new TreeNode("korzen")
-  .add(new TreeNode("notka1"))
-  .add(new TreeNode("notka2")
-    .add(new TreeNode("notka1od2"))
-    .add(new TreeNode("notka2od2")
-      .add(new TreeNode("notka1od22"))
-      .add(new TreeNode("notka2od22"))))
-  .add(new TreeNode("notka3")
-    .add(new TreeNode("notka1od3")));
 
 
 interface ReactTreeGraphNode {
@@ -39,16 +28,55 @@ function displayTree(t: TreeNode<String>): ReactTreeGraphNode
     return result;
 }
 
+export default class App extends Component<{}, { count: number, ourTree: TreeNode<string>}>
+{
+  constructor(props: any){
+    super(props);
+    this.state= {
+      count:0,
+      ourTree: new TreeNode("korzen")
+  .add(new TreeNode("notka1"))
+  .add(new TreeNode("notka2")
+    .add(new TreeNode("notka1od2"))
+    .add(new TreeNode("notka2od2")
+      .add(new TreeNode("notka1od22"))
+      .add(new TreeNode("notka2od22"))))
+  .add(new TreeNode("notka3")
+    .add(new TreeNode("notka1od3"))),
+    }
+  }
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-        <Tree
-            data={displayTree(ourTree)}
-            height={400} // TODO: width and heigh as fullscreen - toolbar
-            width={400}/>
-            </div>
-  );
+  cokolwiek(event: any)
+  {
+    this.setState({
+        count: this.state.count + 1
+      })
+  }
+
+  ubij_noda(event: any, node_key: string)
+  {
+    this.state.ourTree.removeTree(this.state.ourTree.filter(n => n.data === node_key)[0])
+
+    this.setState({
+        ourTree: this.state.ourTree
+    })
+  }
+
+  render()
+  {
+      return (
+        <div className="App">
+            <Tree
+                data={displayTree(this.state.ourTree)}
+                height={400} // TODO: width and heigh as fullscreen - toolbar
+                gProps={{
+                    onClick: this.ubij_noda.bind(this),
+                }}
+                width={400}/>
+            <h1 className="red">{ this.state.count }</h1>
+            <button onClick = { e => this.cokolwiek(e) }>klikaj się!</button>
+        </div>
+      );
+  }
 }
 
-export default App;

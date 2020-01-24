@@ -28,11 +28,12 @@ function displayTree(t: TreeNode<String>): ReactTreeGraphNode
     return result;
 }
 
-export default class App extends Component<{}, { count: number, ourTree: TreeNode<string>}>
+export default class App extends Component<{}, { chosenNode: TreeNode<string>, count: number, ourTree: TreeNode<string>}>
 {
   constructor(props: any){
     super(props);
     this.state= {
+      chosenNode: new TreeNode("exampleNode"),
       count:0,
       ourTree: new TreeNode("korzen")
   .add(new TreeNode("notka1"))
@@ -62,6 +63,12 @@ export default class App extends Component<{}, { count: number, ourTree: TreeNod
     })
   }
 
+  przepiszNoda(event: any, node_key: string) {
+    this.setState({
+        chosenNode: this.state.ourTree.filter(n => n.data === node_key)[0]
+    })
+  }
+
   render()
   {
       return (
@@ -70,13 +77,14 @@ export default class App extends Component<{}, { count: number, ourTree: TreeNod
                 data={displayTree(this.state.ourTree)}
                 height={400} // TODO: width and heigh as fullscreen - toolbar
                 gProps={{
-                    onClick: this.ubij_noda.bind(this),
+                    //onClick: this.ubij_noda.bind(this),
+                    onClick: this.przepiszNoda.bind(this)
                 }}
                 width={400}/>
             <h1 className="red">{ this.state.count }</h1>
+            <p>{this.state.chosenNode.data}</p>
             <button onClick = { e => this.cokolwiek(e) }>klikaj się!</button>
         </div>
       );
   }
 }
-

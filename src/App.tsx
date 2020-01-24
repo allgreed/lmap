@@ -55,7 +55,7 @@ export default class App extends Component<{}, { count: number, ourTree: TreeNod
 
   ubij_noda(event: any, node_key: string)
   {
-    this.state.ourTree.removeTree(this.state.ourTree.filter(n => n.data === node_key)[0])
+    this.state.ourTree.filter(n => n.data === node_key)[0].add(new TreeNode("elon"))
 
     this.setState({
         ourTree: this.state.ourTree

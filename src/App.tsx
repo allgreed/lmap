@@ -33,7 +33,7 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, c
   constructor(props: any){
     super(props);
     this.state= {
-      chosenNode: new TreeNode("exampleNode"),
+      chosenNode: new TreeNode(""),
       count:0,
       ourTree: new TreeNode("korzen")
   .add(new TreeNode("notka1"))
@@ -77,13 +77,13 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, c
                 data={displayTree(this.state.ourTree)}
                 height={400} // TODO: width and heigh as fullscreen - toolbar
                 gProps={{
-                    //onClick: this.ubij_noda.bind(this),
                     onClick: this.przepiszNoda.bind(this)
                 }}
                 width={400}/>
             <h1 className="red">{ this.state.count }</h1>
-            <p>{this.state.chosenNode.data}</p>
-            <button onClick = { e => this.cokolwiek(e) }>klikaj się!</button>
+            <label>Node:</label>
+            <input type="text" value={this.state.chosenNode.data}/>
+            <button onClick = { e => this.ubij_noda(e, this.state.chosenNode.data) }>Dodaj</button>
         </div>
       );
   }

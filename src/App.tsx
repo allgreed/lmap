@@ -88,11 +88,12 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
         <div className="App">
             <Tree
                 data={displayTree(this.state.ourTree)}
-                height={400} // TODO: width and heigh as fullscreen - toolbar
                 gProps={{
                     onClick: this.displayNode.bind(this)
                 }}
-                width={400}/>
+                width={window.innerWidth * (3/4)}
+                height={window.innerHeight * (3/4)}
+                />
 
             <label>Node:</label>
             <p>{this.state.chosenNode.data}</p>

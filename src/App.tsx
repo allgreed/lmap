@@ -45,14 +45,14 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
       .add(new TreeNode("notka2od22"))))
   .add(new TreeNode("notka3")
     .add(new TreeNode("notka1od3"))),
-
-
-    }
+	};
+	this.handleChange = this.handleChange.bind(this);
   }
 
-  onBlur(event: any) {
-   this.setState({value: event.target.value});
- }
+    handleChange(event: any) {
+    this.setState({value: event.target.value});
+    event.preventDefault();
+    }
 
 
 
@@ -84,10 +84,11 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
                     onClick: this.przepiszNoda.bind(this)
                 }}
                 width={400}/>
-
+		
             <label>Node:</label>
-            <input type="text" name="node" value={this.state.value} onBlur={e => this.onBlur(e) }/>
+            <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
             <button onClick = { e => this.ubij_noda(e, this.state.chosenNode.data, this.state.value) }>Dodaj</button>
+
         </div>
       );
   }

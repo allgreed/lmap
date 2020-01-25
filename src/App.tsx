@@ -57,7 +57,6 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
 
 
 
-
   addCustom(event: any, node_key: string, value: string)
   {
     this.state.ourTree.filter(n => n.data === node_key)[0].add(new TreeNode(value))
@@ -82,6 +81,16 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
     })
   }
 
+  editNode(event: any, value: string)
+  {
+    this.state.chosenNode.data = value
+
+    this.setState({
+        ourTree: this.state.ourTree
+    })
+
+  }
+
   render()
   {
       return (
@@ -100,6 +109,7 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
             <button onClick = { e => this.remove(e) }>Usuń</button>
             <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
             <button onClick = { e => this.addCustom(e, this.state.chosenNode.data, this.state.value) }>Dodaj</button>
+            <button onClick = { e => this.editNode(e, this.state.value) }>Edytuj</button>
 
         </div>
       );

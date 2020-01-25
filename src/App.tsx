@@ -28,12 +28,13 @@ function displayTree(t: TreeNode<String>): ReactTreeGraphNode
     return result;
 }
 
-export default class App extends Component<{}, { chosenNode: TreeNode<string>, count: number, ourTree: TreeNode<string>}>
+export default class App extends Component<{}, { chosenNode: TreeNode<string>, value: string, count: number, ourTree: TreeNode<string>}>
 {
   constructor(props: any){
     super(props);
     this.state= {
       chosenNode: new TreeNode(""),
+      value: 'Name',
       count:0,
       ourTree: new TreeNode("korzen")
   .add(new TreeNode("notka1"))
@@ -44,23 +45,26 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, c
       .add(new TreeNode("notka2od22"))))
   .add(new TreeNode("notka3")
     .add(new TreeNode("notka1od3"))),
+
+
     }
   }
 
-  cokolwiek(event: any)
-  {
-    this.setState({
-        count: this.state.count + 1
-      })
-  }
+  onBlur(event: any) {
+   this.setState({value: event.target.value});
+ }
 
-  ubij_noda(event: any, node_key: string)
+
+
+
+  ubij_noda(event: any, node_key: string, value: string)
   {
-    this.state.ourTree.filter(n => n.data === node_key)[0].add(new TreeNode("elon"))
+    this.state.ourTree.filter(n => n.data === node_key)[0].add(new TreeNode(value))
 
     this.setState({
         ourTree: this.state.ourTree
     })
+
   }
 
   przepiszNoda(event: any, node_key: string) {
@@ -80,10 +84,10 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, c
                     onClick: this.przepiszNoda.bind(this)
                 }}
                 width={400}/>
-            <h1 className="red">{ this.state.count }</h1>
+
             <label>Node:</label>
-            <input type="text" value={this.state.chosenNode.data}/>
-            <button onClick = { e => this.ubij_noda(e, this.state.chosenNode.data) }>Dodaj</button>
+            <input type="text" name="node" value={this.state.value} onBlur={e => this.onBlur(e) }/>
+            <button onClick = { e => this.ubij_noda(e, this.state.chosenNode.data, this.state.value) }>Dodaj</button>
         </div>
       );
   }

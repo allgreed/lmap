@@ -48,6 +48,7 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
     .add(new TreeNode("notka1od3"))),
 	};
 	this.handleChange = this.handleChange.bind(this);
+  this.handleChange1 = this.handleChange1.bind(this);
   }
 
     handleChange(event: any) {
@@ -55,7 +56,10 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
     event.preventDefault();
     }
 
-
+    handleChange1(event: any) {
+    this.setState({value: event.target.value});
+    event.preventDefault();
+    }
 
 
   addCustom(event: any, node_key: string, value: string)
@@ -82,6 +86,16 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
     })
   }
 
+  editNode(event: any, node_key: string, value: string)
+  {
+    this.state.chosenNode.data = value
+
+    this.setState({
+        ourTree: this.state.ourTree
+    })
+
+  }
+
   render()
   {
       return (
@@ -99,6 +113,8 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
             <button onClick = { e => this.remove(e) }>Usuń</button>
             <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
             <button onClick = { e => this.addCustom(e, this.state.chosenNode.data, this.state.value) }>Dodaj</button>
+            <input type="text" name="node" value={this.state.value} onChange={this.handleChange1}/>
+            <button onClick = { e => this.editNode(e, this.state.chosenNode.data, this.state.value) }>Edytuj</button>
 
         </div>
       );

@@ -1,5 +1,6 @@
 import { URL, Name, Resource } from './core/main';
 import { TreeNode } from './core/tree_methods';
+import { getParent } from './core/tree_methods';
 import React, { Component } from 'react';
 import './App.css';
 import 'react-tree-graph/dist/style.css';
@@ -57,7 +58,7 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
 
 
 
-  ubij_noda(event: any, node_key: string, value: string)
+  addCustom(event: any, node_key: string, value: string)
   {
     this.state.ourTree.filter(n => n.data === node_key)[0].add(new TreeNode(value))
 
@@ -67,7 +68,15 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
 
   }
 
-  przepiszNoda(event: any, node_key: string) {
+  remove(event: any){
+   getParent(this.state.chosenNode, this.state.ourTree).removeNode(this.state.chosenNode)
+
+   this.setState({
+       ourTree: this.state.ourTree
+   })
+ }
+
+  displayNode(event: any, node_key: string) {
     this.setState({
         chosenNode: this.state.ourTree.filter(n => n.data === node_key)[0]
     })
@@ -81,13 +90,15 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
                 data={displayTree(this.state.ourTree)}
                 height={400} // TODO: width and heigh as fullscreen - toolbar
                 gProps={{
-                    onClick: this.przepiszNoda.bind(this)
+                    onClick: this.displayNode.bind(this)
                 }}
                 width={400}/>
-		
+
             <label>Node:</label>
+            <p>{this.state.chosenNode.data}</p>
+            <button onClick = { e => this.remove(e) }>Usuń</button>
             <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
-            <button onClick = { e => this.ubij_noda(e, this.state.chosenNode.data, this.state.value) }>Dodaj</button>
+            <button onClick = { e => this.addCustom(e, this.state.chosenNode.data, this.state.value) }>Dodaj</button>
 
         </div>
       );

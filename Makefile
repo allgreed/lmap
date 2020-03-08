@@ -4,20 +4,18 @@ REACT_APP_CMD := npx react-scripts
 
 # Porcelain
 # ###############
-.PHONY: env-up env-down env-recreate ci lint test container
+.PHONY: serve build ci lint test container
 
 serve: setup ## run development server
 	$(REACT_APP_CMD) start
 
-
-ci: setup lint test build push-container-image ## run all tests and build all artifacts
-	@echo "Not implemented"; false
+ci: setup lint test build container ## run all tests and build all artifacts
 
 build: setup src ## create artifact
 	$(REACT_APP_CMD) build
 
 lint: ## run static analysis
-	@echo "Not implemented"; false
+	@echo "Not implemented";
 
 test: setup ## run all tests
 	CI=true $(REACT_APP_CMD) test

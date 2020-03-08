@@ -1,3 +1,8 @@
+# lmap
+Essentially a mind map and a todolist 
+
+[![Build Status](https://cloud.drone.io/api/badges/allgreed/lmap/status.svg)](https://cloud.drone.io/allgreed/lmap)
+
 ## Prerequisites
 - [nix](https://nixos.org/nix/manual/#chap-installation)
 - direnv (`nix-env -i direnv`)

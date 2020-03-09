@@ -9,15 +9,17 @@ const Tree:any = require('react-tree-graph'); // missing external types, haxing 
 
 
 interface ReactTreeGraphNode {
-    name: String,
+    name: string,
+    id: string,
     children: Array<ReactTreeGraphNode>,
 }
 
 
-function displayTree(t: TreeNode<String>): ReactTreeGraphNode
+function displayTree(t: TreeNode<string>): ReactTreeGraphNode
 {
     const result: ReactTreeGraphNode = {
-        name: t.data,
+        name: t.name,
+        id: t.id,
         children: [],
     }
 
@@ -57,9 +59,9 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
 
 
 
-  addCustom(event: any, node_key: string, value: string)
+  addCustom(event: any, node_id: string, value: string)
   {
-    this.state.ourTree.filter(n => n.data === node_key)[0].add(new TreeNode(value))
+    this.state.ourTree.filter(n => n.id === node_id)[0].add(new TreeNode(value))
 
     this.setState({
         ourTree: this.state.ourTree
@@ -68,22 +70,23 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
   }
 
   remove(event: any){
-   getParent(this.state.chosenNode, this.state.ourTree).removeNode(this.state.chosenNode)
+    getParent(this.state.chosenNode, this.state.ourTree).removeNode(this.state.chosenNode)
 
-   this.setState({
-       ourTree: this.state.ourTree
-   })
- }
-
-  displayNode(event: any, node_key: string) {
     this.setState({
-        chosenNode: this.state.ourTree.filter(n => n.data === node_key)[0]
+        ourTree: this.state.ourTree,
+        chosenNode: this.state.ourTree
+    })
+  }
+
+  selectNode(event: any, node_id: string) {
+    this.setState({
+      chosenNode: node_id == this.state.ourTree.id ? this.state.ourTree : this.state.ourTree.filter(n => n.id === node_id)[0]
     })
   }
 
   editNode(event: any, value: string)
   {
-    this.state.chosenNode.data = value
+    this.state.chosenNode.name = value
 
     this.setState({
         ourTree: this.state.ourTree
@@ -98,17 +101,17 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
             <Tree
                 data={displayTree(this.state.ourTree)}
                 gProps={{
-                    onClick: this.displayNode.bind(this)
+                    onClick: this.selectNode.bind(this)
                 }}
                 width={window.innerWidth * (3/4)}
                 height={window.innerHeight * (3/4)}
+                keyProp="id"
                 />
 
-            <label>Node:</label>
-            <p>{this.state.chosenNode.data}</p>
+            <label>Selected node: {this.state.chosenNode.name} : {this.state.chosenNode.id}</label>
             <button onClick = { e => this.remove(e) }>Usuń</button>
             <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
-            <button onClick = { e => this.addCustom(e, this.state.chosenNode.data, this.state.value) }>Dodaj</button>
+            <button onClick = { e => this.addCustom(e, this.state.chosenNode.id, this.state.value) }>Dodaj</button>
             <button onClick = { e => this.editNode(e, this.state.value) }>Edytuj</button>
 
         </div>

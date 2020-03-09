@@ -1,16 +1,19 @@
 import * as _ from "lodash"
+import id from "./id"
 
-export class TreeNode<T> {
+export class TreeNode<T> 
+{
   name: string;
   id: string;
   children: TreeNode<T>[];
 
-  constructor(name: string, children: TreeNode<T>[] = []) {
-    this.name = name;
-    this.id = Math.random().toString(36).substr(2, 9);
-    this.children = children;
+  constructor(name: string, children: TreeNode<T>[] = []) 
+  {
+      this.name = name;
+      this.id = id();
+      this.children = children;
   }
-  add(node: TreeNode<T>): TreeNode<T> 
+  add(node: TreeNode<T>): TreeNode<T>
   {
       this.children.push(node);
       return this;
@@ -25,15 +28,18 @@ export class TreeNode<T> {
   {
   //remove node and attach its any children to this.
   //return -1 if node doesnt exist
-    let  chosenChild = this.children.find(child => child === node);
-    if (chosenChild !== undefined) {
-      let  chosenChildIndex = this.children.indexOf(chosenChild);
-      chosenChild.children.forEach(grandChild => this.add(grandChild));
-      this.children.splice(chosenChildIndex, 1);
-      return 0;
-    }else {
-      return -1;
-    }
+      let  chosenChild = this.children.find(child => child === node);
+      if (chosenChild !== undefined) 
+      {
+          let  chosenChildIndex = this.children.indexOf(chosenChild);
+          chosenChild.children.forEach(grandChild => this.add(grandChild));
+          this.children.splice(chosenChildIndex, 1);
+          return 0;
+      }
+      else 
+      {
+          return -1;
+      }
   }
   clone() 
   {
@@ -42,13 +48,17 @@ export class TreeNode<T> {
   filterREC(f: (arg: TreeNode<T>) => boolean, results: TreeNode<T>[])
   {
   //for filter()
-    if(f(this)){
-      results.push(this)
-    } else {
-      this.children.forEach(function(child){
-        child.filterREC(f, results);
-      });
-    }
+      if(f(this))
+      {
+          results.push(this)
+      }
+      else 
+      {
+          this.children.forEach(function(child)
+          {
+              child.filterREC(f, results);
+          });
+      }
     
   }
   filter(f: (arg: TreeNode<T>) => boolean): TreeNode<T>[] 

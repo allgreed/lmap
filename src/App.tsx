@@ -60,33 +60,33 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
     }
 
 
-    this.state.ourTree.filter(n => n.id === node_id)[0].add(new TreeNode(value))
-
-    addCustom(event: any, node_key: string, value: string)
-        this.state.ourTree.filter(n => n.data === node_key)[0].add(new TreeNode(value))
-
+    addCustom(event: any, node_id: string, value: string)
+    {
+        this.state.ourTree.filter(n => n.id === node_id)[0].add(new TreeNode(value))
         this.setState({
             ourTree: this.state.ourTree
         })
+    }
+    remove(event: any)
+    {
+        getParent(this.state.chosenNode, this.state.ourTree).removeNode(this.state.chosenNode)
 
-  remove(event: any){
-    getParent(this.state.chosenNode, this.state.ourTree).removeNode(this.state.chosenNode)
+        this.setState({
+            ourTree: this.state.ourTree,
+            chosenNode: this.state.ourTree
+        })
+    }
 
-    this.setState({
-        ourTree: this.state.ourTree,
-        chosenNode: this.state.ourTree
-    })
-  }
+    selectNode(event: any, node_id: string) 
+    {
+        this.setState({
+            chosenNode: node_id === this.state.ourTree.id ? this.state.ourTree : this.state.ourTree.filter(n => n.id === node_id)[0]
+        })
+    }
 
-  selectNode(event: any, node_id: string) {
-    this.setState({
-      chosenNode: node_id == this.state.ourTree.id ? this.state.ourTree : this.state.ourTree.filter(n => n.id === node_id)[0]
-    })
-  }
-
-  editNode(event: any, value: string)
-  {
-    this.state.chosenNode.name = value
+    editNode(event: any, value: string)
+    {
+        this.state.chosenNode.name = value
 
         this.setState({
             ourTree: this.state.ourTree
@@ -94,25 +94,25 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
 
     }
 
-  render()
-  {
-      return (
-        <div className="App">
-            <Tree
-                data={displayTree(this.state.ourTree)}
-                gProps={{
-                    onClick: this.selectNode.bind(this)
-                }}
-                width={window.innerWidth * (3/4)}
-                height={window.innerHeight * (3/4)}
-                keyProp="id"
+    render()
+    {
+        return (
+            <div className="App">
+                <Tree
+                    data={displayTree(this.state.ourTree)}
+                    gProps={{
+                        onClick: this.selectNode.bind(this)
+                    }}
+                    width={window.innerWidth * (3/4)}
+                    height={window.innerHeight * (3/4)}
+                    keyProp="id"
                 />
 
-            <label>Selected node: {this.state.chosenNode.name} : {this.state.chosenNode.id}</label>
-            <button onClick = { e => this.remove(e) }>Usuń</button>
-            <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
-            <button onClick = { e => this.addCustom(e, this.state.chosenNode.id, this.state.value) }>Dodaj</button>
-            <button onClick = { e => this.editNode(e, this.state.value) }>Edytuj</button>
+                <label>Selected node: {this.state.chosenNode.name} : {this.state.chosenNode.id}</label>
+                <button disabled={this.state.chosenNode.id === this.state.ourTree.id ? true : false} onClick = { e => this.remove(e) }>Usuń</button>
+                <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
+                <button onClick = { e => this.addCustom(e, this.state.chosenNode.id, this.state.value) }>Dodaj</button>
+                <button onClick = { e => this.editNode(e, this.state.value) }>Edytuj</button>
 
             </div>
         );

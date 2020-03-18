@@ -1,0 +1,22 @@
+{
+        "extends": "react-app",
+	    "rules":
+        {
+            "indent": ["error", 4, { "SwitchCase": 1 }],
+            "max-len": "off",
+            "brace-style": ["error", "allman", { "allowSingleLine": true }],
+            "camelcase": "off",
+            "quotes": ["error", "double"],
+            "quote-props": ["error", "consistent"],
+            "space-before-function-paren": [
+                "error",
+                {
+                    "anonymous": "never",
+                    "named": "never",
+                    "asyncArrow": "always"
+                }
+            ],
+            "comma-spacing": ["error", { "before": false, "after": true }]
+        }
+
+}

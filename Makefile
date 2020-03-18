@@ -1,22 +1,26 @@
 .DEFAULT_GOAL := help
 
-REACT_APP_CMD := npx react-scripts
+REACT_APP_CMD := EXTEND_ESLINT=true npx react-scripts
+SRC_FILES := ./src/**/*.ts[x] ./src/*.ts[x]
 
 # Porcelain
 # ###############
-.PHONY: serve build ci lint test container
+.PHONY: run build ci lint test container
 
-serve: setup ## run development server
+run: setup ## run development server
 	$(REACT_APP_CMD) start
 
-ci: setup lint test build ## run all tests and build all artifacts
+ci: setup test lint build ## run all tests and build all artifacts
 	# except for the container heh ;d
 
 build: setup src ## create artifact
 	CI=false $(REACT_APP_CMD) build  # ad hoc fix for warnings
 
+lint-fix:  ## automatically fix linter errors (if possible)
+	npx eslint $(SRC_FILES) --fix
+
 lint: ## run static analysis
-	@echo "Not implemented";
+	npx eslint $(SRC_FILES)
 
 test: setup ## run all tests
 	CI=false $(REACT_APP_CMD) test  # ad hoc fix for warnings

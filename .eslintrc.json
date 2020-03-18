@@ -6,7 +6,6 @@
             "max-len": "off",
             "brace-style": ["error", "allman", { "allowSingleLine": true }],
             "camelcase": "off",
-            "no-console": "error",
             "quotes": ["error", "double"],
             "quote-props": ["error", "consistent"],
             "space-before-function-paren": [

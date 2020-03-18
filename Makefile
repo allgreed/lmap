@@ -1,15 +1,15 @@
 .DEFAULT_GOAL := help
 
-REACT_APP_CMD := npx react-scripts
+REACT_APP_CMD := EXTEND_ESLINT=true npx react-scripts
 
 # Porcelain
 # ###############
-.PHONY: serve build ci lint test container
+.PHONY: run build ci lint test container
 
-serve: setup ## run development server
+run: setup ## run development server
 	$(REACT_APP_CMD) start
 
-ci: setup lint test build ## run all tests and build all artifacts
+ci: setup test lint build ## run all tests and build all artifacts
 	# except for the container heh ;d
 
 build: setup src ## create artifact

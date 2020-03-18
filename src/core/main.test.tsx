@@ -1,5 +1,6 @@
 const ble = (i: Number): Number => i + 1;
 
-it('works!', () => {
+it("works!", () => 
+{
     expect(ble(5)).toBe(6);
 });

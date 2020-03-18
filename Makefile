@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 
 REACT_APP_CMD := EXTEND_ESLINT=true npx react-scripts
-SRC_FILES := ./src/**/*.ts ./src/*.ts
+SRC_FILES := ./src/**/*.ts[x] ./src/*.ts[x]
 
 # Porcelain
 # ###############

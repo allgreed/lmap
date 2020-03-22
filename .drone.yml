@@ -5,16 +5,16 @@ name: default
 
 steps:
 - commands:
-  - nix-shell --run 'make lint'
+  - nix-shell --quiet --run 'make lint'
   image: nixos/nix:2.3
   name: lint
 
 - commands:
-  - nix-shell --run 'make test'
+  - nix-shell --quiet --run 'make test'
   image: nixos/nix:2.3
   name: test
 
 - commands:
-  - nix-shell --run 'make build'
+  - nix-shell --quiet --run 'make build'
   image: nixos/nix:2.3
   name: build

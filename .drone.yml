@@ -4,17 +4,34 @@ type: docker
 name: default
 
 steps:
-- commands:
+- name: lint
+  image: nixos/nix:2.3
+  commands:
   - nix-shell --quiet --run 'make lint'
-  image: nixos/nix:2.3
-  name: lint
 
-- commands:
+- name: test
+  image: nixos/nix:2.3
+  commands:
   - nix-shell --quiet --run 'make test'
-  image: nixos/nix:2.3
-  name: test
 
-- commands:
-  - nix-shell --quiet --run 'make build'
+- name: build
   image: nixos/nix:2.3
-  name: build
+  commands:
+  - nix-shell --quiet --run 'make build'
+
+- name: prepare_docker_image_tags
+  image: nixos/nix:2.3
+  commands:
+  - echo -n "latest,preview$DRONE_COMMIT_SHA" > .tags
+
+- name: docker  
+  image: plugins/docker
+  settings:
+    username:
+      from_secret: docker_username
+    password:
+      from_secret: docker_password
+    repo: allgreed/lmap
+  when:
+    branch:
+    - master

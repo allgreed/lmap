@@ -5,13 +5,10 @@ SRC_FILES := ./src/**/*.ts[x] ./src/*.ts[x]
 
 # Porcelain
 # ###############
-.PHONY: run build ci lint test container
+.PHONY: run build lint test container
 
 run: setup ## run development server
 	$(REACT_APP_CMD) start
-
-ci: setup test lint build ## run all tests and build all artifacts
-	# except for the container heh ;d
 
 build: setup src ## create artifact
 	CI=false $(REACT_APP_CMD) build  # ad hoc fix for warnings

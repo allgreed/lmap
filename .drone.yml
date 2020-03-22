@@ -1,9 +1,0 @@
-kind: pipeline
-type: docker
-name: default
-
-steps:
-- name: main
-  image: nixos/nix:2.3
-  commands:
-  - nix-shell --run 'make ci'

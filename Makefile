@@ -13,10 +13,10 @@ run: setup ## run development server
 build: setup src ## create artifact
 	CI=false $(REACT_APP_CMD) build  # ad hoc fix for warnings
 
-lint-fix:  ## automatically fix linter errors (if possible)
+lint-fix: setup ## automatically fix linter errors (if possible)
 	npx eslint $(SRC_FILES) --fix
 
-lint: ## run static analysis
+lint: setup ## run static analysis
 	npx eslint $(SRC_FILES)
 
 test: setup ## run all tests

@@ -1,9 +1,20 @@
+---
 kind: pipeline
 type: docker
 name: default
 
 steps:
-- name: main
+- commands:
+  - nix-shell --quiet --run 'make lint'
   image: nixos/nix:2.3
-  commands:
-  - nix-shell --run 'make ci'
+  name: lint
+
+- commands:
+  - nix-shell --quiet --run 'make test'
+  image: nixos/nix:2.3
+  name: test
+
+- commands:
+  - nix-shell --quiet --run 'make build'
+  image: nixos/nix:2.3
+  name: build

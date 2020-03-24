@@ -42,7 +42,7 @@ steps:
     NOMAD_URL:
       from_secret: nomad_url
   commands:
-  - nix-shell --quiet --run 'make deploy' VERSION=preview$DRONE_COMMIT_SHA NOMAD_URL=$NOMAD_URL
+  - nix-shell --quiet --run "make deploy VERSION=preview$DRONE_COMMIT_SHA NOMAD_URL=$NOMAD_URL"
   when:
     branch:
     - master

@@ -1,3 +1,5 @@
+# vim: set ft=hcl:
+cat << EOF
 job "lmap" {
   datacenters = ["dc1"]
 
@@ -8,7 +10,7 @@ job "lmap" {
       driver = "docker"
 
       config {
-        image = "allgreed/lmap:preview0"
+        image = "allgreed/lmap:$VERSION"
         port_map = {
             http = 80
         }
@@ -27,3 +29,4 @@ job "lmap" {
     }
   }
 }
+EOF

@@ -35,3 +35,14 @@ steps:
   when:
     branch:
     - master
+
+- name: deploy
+  image: nixos/nix:2.3
+  environment:
+    NOMAD_URL:
+      from_secret: nomad_url
+  commands:
+  - nix-shell --quiet --run 'make deploy' VERSION=preview$DRONE_COMMIT_SHA NOMAD_URL=$NOMAD_URL
+  when:
+    branch:
+    - master

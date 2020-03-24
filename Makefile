@@ -5,7 +5,7 @@ SRC_FILES := ./src/**/*.ts[x] ./src/*.ts[x]
 
 # Porcelain
 # ###############
-.PHONY: run build lint test container
+.PHONY: run build lint test container deploy
 
 run: setup ## run development server
 	$(REACT_APP_CMD) start
@@ -31,6 +31,10 @@ container: build ## create container
 init: ## one time setup
 	direnv allow
 
+deploy: ## deploy a container to Nomad
+	VERSION=$(VERSION) ./deploy.nomad.tpl > deploy.nomad
+	nomad job run -address=$(NOMAD_URL) deploy.nomad
+
 
 # Plumbing
 # ###############
@@ -44,6 +48,7 @@ node_modules: package.json yarn.lock
 	
 clean:
 	rm yarn-error.log
+	rm deploy.nomad
 
 # Utilities
 # ###############

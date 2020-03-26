@@ -60,7 +60,16 @@ trigger:
     - pull_request
 
 steps:
-- name: ble
+- name: prepare msg
   image: nixos/nix:2.3
   commands:
-  - echo "noop"
+  - echo -n "New PR avaible at https://github.com/allgreed/lmap/pull/$DRONE_PULL_REQUEST" > msg.tpl
+
+- name: notify
+  image: appleboy/drone-telegram
+  settings:
+    token:
+      from_secret: telegram_token
+    to:
+      from_secret: telegram_chat_id
+    message_file: msg.tpl

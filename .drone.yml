@@ -60,7 +60,7 @@ trigger:
     - pull_request
 
 steps:
-- name: ble
+- name: print_env
   image: nixos/nix:2.3
   commands:
-  - echo "noop"
+  - env

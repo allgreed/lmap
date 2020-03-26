@@ -2,8 +2,18 @@
 kind: pipeline
 type: docker
 name: default
+trigger:
+  event:
+    exclude:
+    - pull_request
 
 steps:
+- name: setup
+  image: nixos/nix:2.3
+  commands:
+  - nix-shell --quiet --run 'make setup'
+  - echo -n "latest,preview$DRONE_COMMIT_SHA" > .tags
+
 - name: lint
   image: nixos/nix:2.3
   commands:
@@ -18,11 +28,6 @@ steps:
   image: nixos/nix:2.3
   commands:
   - nix-shell --quiet --run 'make build'
-
-- name: prepare_docker_image_tags
-  image: nixos/nix:2.3
-  commands:
-  - echo -n "latest,preview$DRONE_COMMIT_SHA" > .tags
 
 - name: docker  
   image: plugins/docker
@@ -46,3 +51,16 @@ steps:
   when:
     branch:
     - master
+---
+kind: pipeline
+type: docker
+name: pr
+trigger:
+  event:
+    - pull_request
+
+steps:
+- name: ble
+  image: nixos/nix:2.3
+  commands:
+  - echo "noop"

@@ -1,15 +1,15 @@
 import * as tree from "./tree_methods"
 
 
-let treeRoot = new tree.TreeNode("korzen")
-    .add(new tree.TreeNode("notka1"))
-    .add(new tree.TreeNode("notka2")
-        .add(new tree.TreeNode("notka1od2"))
-        .add(new tree.TreeNode("notka2od2")
-            .add(new tree.TreeNode("notka1od22"))
-            .add(new tree.TreeNode("notka2od22"))))
-    .add(new tree.TreeNode("notka3")
-        .add(new tree.TreeNode("notka1od3")));
+let treeRoot = new tree.TreeNode({name: "korzen"})
+    .add(new tree.TreeNode({name: "notka1")})
+    .add(new tree.TreeNode({name: "notka2"})
+        .add(new tree.TreeNode({name: "notka1od2")})
+        .add(new tree.TreeNode({name: "notka2od2"})
+            .add(new tree.TreeNode({name: "notka1od22"}))
+            .add(new tree.TreeNode({name: "notka2od22"}))))
+    .add(new tree.TreeNode({name: "notka3"})
+        .add(new tree.TreeNode({name: "notka1od3"})));
 
 
 test("count tree nodes", () => 
@@ -22,7 +22,7 @@ test("add node", () =>
 {
     let root = treeRoot.clone();
     let node = root.children.filter(child => (child.data === "notka3"))[0]
-    node.add(new tree.TreeNode("notatka2od3"));
+    node.add(new tree.TreeNode({name: "notatka2od3"}));
     expect(node.children.some(child => (child.data === "notatka2od3"))).toEqual(true);
     expect(tree.howManyTreeNodes(root)).toEqual(9);
 });

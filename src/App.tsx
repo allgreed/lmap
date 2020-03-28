@@ -18,7 +18,7 @@ interface ReactTreeGraphNode {
 function displayTree(t: TreeNode<string>): ReactTreeGraphNode
 {
     const result: ReactTreeGraphNode = {
-        name: t.name,
+        name: t.data.name,
         id: t.id,
         children: [],
     }
@@ -63,10 +63,9 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
     addCustom(event: any, node_id: string, value: string)
     {
         this.state.ourTree.filter(n => n.id === node_id)[0].add(new TreeNode(value))
-        this.setState({
-            ourTree: this.state.ourTree
-        })
+
     }
+
     remove(event: any)
     {
         getParent(this.state.chosenNode, this.state.ourTree).removeNode(this.state.chosenNode)
@@ -80,7 +79,7 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
     selectNode(event: any, node_id: string) 
     {
         this.setState({
-            chosenNode: node_id === this.state.ourTree.id ? this.state.ourTree : this.state.ourTree.filter(n => n.id === node_id)[0]
+            chosenNode: node_id == this.state.ourTree.id ? this.state.ourTree : this.state.ourTree.filter(n => n.id === node_id)[0]
         })
     }
 
@@ -109,7 +108,7 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
                 />
 
                 <label>Selected node: {this.state.chosenNode.name} : {this.state.chosenNode.id}</label>
-                <button disabled={this.state.chosenNode.id === this.state.ourTree.id ? true : false} onClick = { e => this.remove(e) }>Usuń</button>
+                <button onClick = { e => this.remove(e) }>Usuń</button>
                 <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
                 <button onClick = { e => this.addCustom(e, this.state.chosenNode.id, this.state.value) }>Dodaj</button>
                 <button onClick = { e => this.editNode(e, this.state.value) }>Edytuj</button>

@@ -63,7 +63,7 @@ steps:
 - name: prepare msg
   image: nixos/nix:2.3
   commands:
-  - echo -n "New PR avaible at https://github.com/allgreed/lmap/pull/$DRONE_PULL_REQUEST" > msg.tpl
+  - echo -n "New code worth reviewing => https://github.com/allgreed/lmap/pull/$DRONE_PULL_REQUEST" > msg.tpl
 
 - name: notify
   image: appleboy/drone-telegram

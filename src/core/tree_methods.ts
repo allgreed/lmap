@@ -6,6 +6,12 @@ function id(): string {
     .substr(2, 9);
 }
 
+const treeIdProvider = id;
+
+export function makeTree<T>(data: T, idProvider: () => string = treeIdProvider){
+  return new TreeNode<T>(data, treeIdProvider(), [])
+}
+
 export class TreeNode<T> {
   id: string;
   children: TreeNode<T>[];
@@ -16,8 +22,12 @@ export class TreeNode<T> {
     this.id = id;
     this.children = children;
   }
-  add(data: T, idProvider: () => string = id): TreeNode<T> {
-    this.children.push(new TreeNode<T>(data, idProvider(), []));
+  add(data: T, idProvider: () => string = treeIdProvider): TreeNode<T> {
+    this.children.push(makeTree<T>(data, idProvider));
+    return this;
+  }
+  addTree(node: TreeNode<T>): TreeNode<T> {
+    this.children.push(node);
     return this;
   }
   removeTree(node: TreeNode<T>) {
@@ -62,33 +72,31 @@ export class TreeNode<T> {
     filterREC(f, searchResults);
     return searchResults;
   }
-}
-
-export function getParent<T>(
-  node: TreeNode<T>,
-  root: TreeNode<T>
-): TreeNode<T> {
-  function getParentREC<T>(
-    node: TreeNode<T>,
-    root: TreeNode<T>,
-    parentList: TreeNode<T>[]
-  ) {
-    root.children.forEach(child => {
-      if (child === node) {
-        parentList.push(root);
-      }
-      getParentREC(node, child, parentList);
+  get length(): number {
+    let no: number = this.children.length;
+    this.children.forEach(function(child) {
+      no += child.length;
     });
+    return no;
   }
-  let parent: TreeNode<T>[] = [];
-  getParentREC(node, root, parent);
-  return parent[0];
-}
-
-export function howManyTreeNodes<T>(root: TreeNode<T>): number {
-  let no: number = root.children.length;
-  root.children.forEach(function(child) {
-    no += howManyTreeNodes(child);
-  });
-  return no;
+  getParent<T>(
+    node: TreeNode<T>,
+    root: TreeNode<T>
+  ): TreeNode<T> {
+    function getParentREC<T>(
+      node: TreeNode<T>,
+      root: TreeNode<T>,
+      parentList: TreeNode<T>[]
+    ) {
+      root.children.forEach(child => {
+        if (child === node) {
+          parentList.push(root);
+        }
+        getParentREC(node, child, parentList);
+      });
+    }
+    let parent: TreeNode<T>[] = [];
+    getParentREC(node, root, parent);
+    return parent[0];
+  }
 }

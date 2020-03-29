@@ -1,6 +1,5 @@
 import { URL, Name, Resource } from "./core/main";
-import { TreeNode } from "./core/tree_methods";
-import { getParent } from "./core/tree_methods";
+import { TreeNode, getParent, makeTree} from "./core/tree_methods";
 import React, { Component } from "react";
 import "./App.css";
 import "react-tree-graph/dist/style.css";
@@ -40,15 +39,20 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
             chosenNode: new TreeNode(""),
             value: "Name",
             count:0,
-            ourTree: new TreeNode("korzen")
-                .add(new TreeNode("notka1"))
-                .add(new TreeNode("notka2")
-                    .add(new TreeNode("notka1od2"))
-                    .add(new TreeNode("notka2od2")
-                        .add(new TreeNode("notka1od22"))
-                        .add(new TreeNode("notka2od22"))))
-                .add(new TreeNode("notka3")
-                    .add(new TreeNode("notka1od3"))),
+            ourTree: makeTree({name: "korzen"})
+                .add({name: "notka1"})
+                .add({name: "notka2"})
+                .addTree(tree.makeTree({name: "notka3"})
+                    .add({name: "notka1od3"})
+                    .add({name: "notka2od3"}))
+                .addTree(tree.makeTree({name: "notka4"})
+                    .add({name: "notka1od4"})
+                    .add({name: "notka1od4"})
+                    .addTree(tree.makeTree({name: "notka3od4"})
+                        .add({name: "notka1od3"})
+                        .add({name: "notka2od3"}))
+                    .add({name: "notka5"})),
+        
         };
         this.handleChange = this.handleChange.bind(this);
     }

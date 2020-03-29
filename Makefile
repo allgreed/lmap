@@ -1,7 +1,7 @@
 .DEFAULT_GOAL := help
 
 REACT_APP_CMD := EXTEND_ESLINT=true npx react-scripts
-SRC_FILES := ./src/**/*.ts[x] ./src/*.ts[x]
+LINTED_FILES := ./src/**/*.ts{,x} ./src/*.ts{,x}
 
 # Porcelain
 # ###############
@@ -14,10 +14,10 @@ build: setup src ## create artifact
 	CI=false $(REACT_APP_CMD) build  # ad hoc fix for warnings
 
 lint-fix: setup ## automatically fix linter errors (if possible)
-	npx eslint $(SRC_FILES) --fix
+	npx eslint $(LINTED_FILES) --fix
 
 lint: setup ## run static analysis
-	npx eslint $(SRC_FILES)
+	npx eslint $(LINTED_FILES)
 
 test: setup ## run all tests
 	CI=false $(REACT_APP_CMD) test  # ad hoc fix for warnings

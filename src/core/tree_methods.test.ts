@@ -34,36 +34,40 @@ test("add node", () =>
     expect(node.children.some(child => (child.data.name === "notatka2od3"))).toEqual(true);
 });
 
+test("flatten a tree", () =>
+{
+    let root = treeRoot.clone();
+    let flattenedTree = root.flatten();
+    expect(flattenedTree.length).toEqual(13)
+})
+
 test("find node with string", () => 
 {
     let root = treeRoot.clone();
-    let nodesWithString = root.children.filter((child) => child.data.name.includes("1od"));
+    let nodesWithString = root.flatten().filter((child) => child.data.name.includes("1od"));
     expect(nodesWithString.every(obj => obj.data.name.includes("1od"))).toEqual(true);
 });
-
-test("filter function", () =>
-{
-    let root = treeRoot.clone();
-    let filteredNodes = root.filter((child) => child.data.name.includes("1od"))
-}
-)
 
 test("find parent of a node", () => 
 {
     let root = treeRoot.clone();
-    let exampleNode = root.filter((child) => child.data.name.includes("1od"))[0];
-    let exampleParent = exampleNode.getParent({ node: exampleNode, root });
-    expect(exampleParent.data).toEqual("notka2");
+    let exampleNode = root.flatten().filter((child) => child.data.name.includes("notka1od3"))[0];
+    let exampleParent = exampleNode.getParent(exampleNode, root);
+    expect(exampleParent.data.name).toEqual("notka3");
 });
 
 test("remove node", () => 
 {
     let root = treeRoot.clone();
-    let x = root.filter((child) => child.data.name.includes("notka4"))[0];
+    let x = root.flatten().filter((child) => child.data.name.includes("notka3od4"))[0];
     let xChildren = x.children;
-    let parent = root.getParent({ node: x, root })
-    root.getParent({ node: x, root }).removeNode(x);
-    expect(root.length).toEqual(7);
-    expect(parent.children.some(child => child.data.name === "notka2od2")).toEqual(false);
-    expect(parent.children).toEqual(expect.arrayContaining(xChildren));
+    let parent = root.getParent(x, root) // notka4
+    let lenBeforeRemoval = root.length
+
+    root.getParent(x, root).removeNode(x);
+
+    expect(root.length).toEqual(lenBeforeRemoval - 1);
+    expect(parent.children.some(child => child.data.name === "notka3od4")).toEqual(false);
+    // TODO: check rest of the tree, check order of items in tree
+    //expect(parent.children).toEqual(expect.arrayContaining(xChildren));
 });

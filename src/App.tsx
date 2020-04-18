@@ -1,5 +1,5 @@
 import { URL, Name, Resource } from "./core/main";
-import { TreeNode, getParent, makeTree} from "./core/tree_methods";
+import { TreeNode, makeTree} from "./core/tree_methods";
 import React, { Component } from "react";
 import "./App.css";
 import "react-tree-graph/dist/style.css";
@@ -13,8 +13,11 @@ interface ReactTreeGraphNode {
     children: Array<ReactTreeGraphNode>,
 }
 
+interface bleble {
+    name: string,
+}
 
-function displayTree(t: TreeNode<string>): ReactTreeGraphNode
+function displayTree(t: TreeNode<bleble>): ReactTreeGraphNode
 {
     const result: ReactTreeGraphNode = {
         name: t.data.name,
@@ -30,27 +33,27 @@ function displayTree(t: TreeNode<string>): ReactTreeGraphNode
     return result;
 }
 
-export default class App extends Component<{}, { chosenNode: TreeNode<string>, value: string, count: number, ourTree: TreeNode<string>}>
+export default class App extends Component<{}, { chosenNode: TreeNode<bleble>, value: string, count: number, ourTree: TreeNode<bleble>}>
 {
     constructor(props: any)
     {
         super(props);
         this.state= {
-            chosenNode: new TreeNode(""),
+            chosenNode: makeTree({name: ""}),
             value: "Name",
             count:0,
             ourTree: makeTree({name: "korzen"})
                 .add({name: "notka1"})
                 .add({name: "notka2"})
-                .addTree(tree.makeTree({name: "notka3"})
+                .addTree(makeTree({name: "notka3"})
                     .add({name: "notka1od3"})
                     .add({name: "notka2od3"}))
-                .addTree(tree.makeTree({name: "notka4"})
+                .addTree(makeTree({name: "notka4"})
                     .add({name: "notka1od4"})
-                    .add({name: "notka1od4"})
-                    .addTree(tree.makeTree({name: "notka3od4"})
-                        .add({name: "notka1od3"})
-                        .add({name: "notka2od3"}))
+                    .add({name: "notka2od4"})
+                    .addTree(makeTree({name: "notka3od4"})
+                        .add({name: "notka1od34"})
+                        .add({name: "notka2od34"}))
                     .add({name: "notka5"})),
         
         };
@@ -66,13 +69,13 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
 
     addCustom(event: any, node_id: string, value: string)
     {
-        this.state.ourTree.filter(n => n.id === node_id)[0].add(new TreeNode(value))
+        this.state.ourTree.flatten().filter(n => n.id === node_id)[0].add({name: value})
 
     }
 
     remove(event: any)
     {
-        getParent(this.state.chosenNode, this.state.ourTree).removeNode(this.state.chosenNode)
+        this.state.ourTree.getParent(this.state.chosenNode, this.state.ourTree).removeNode(this.state.chosenNode)
 
         this.setState({
             ourTree: this.state.ourTree,
@@ -83,13 +86,13 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
     selectNode(event: any, node_id: string) 
     {
         this.setState({
-            chosenNode: node_id == this.state.ourTree.id ? this.state.ourTree : this.state.ourTree.filter(n => n.id === node_id)[0]
+            chosenNode: node_id === this.state.ourTree.id ? this.state.ourTree : this.state.ourTree.flatten().filter(n => n.id === node_id)[0]
         })
     }
 
     editNode(event: any, value: string)
     {
-        this.state.chosenNode.name = value
+        this.state.chosenNode.data.name = value
 
         this.setState({
             ourTree: this.state.ourTree
@@ -111,7 +114,7 @@ export default class App extends Component<{}, { chosenNode: TreeNode<string>, v
                     keyProp="id"
                 />
 
-                <label>Selected node: {this.state.chosenNode.name} : {this.state.chosenNode.id}</label>
+                <label>Selected node: {this.state.chosenNode.data.name} : {this.state.chosenNode.id}</label>
                 <button onClick = { e => this.remove(e) }>Usuń</button>
                 <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
                 <button onClick = { e => this.addCustom(e, this.state.chosenNode.id, this.state.value) }>Dodaj</button>

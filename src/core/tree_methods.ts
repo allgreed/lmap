@@ -44,13 +44,14 @@ export class TreeNode<T>
     }
     removeNode(node: TreeNode<T>): number 
     {
+        // TODO: Make it better, use getParent or add parent field to node
         //remove node and attach its any children to this.
         //return -1 if node doesnt exist
         let chosenChild = this.children.find(child => child === node);
         if (chosenChild !== undefined) 
         {
             let chosenChildIndex = this.children.indexOf(chosenChild);
-            chosenChild.children.forEach(grandChild => this.add(grandChild));
+            chosenChild.children.forEach(grandChild => this.add(grandChild.data));
             this.children.splice(chosenChildIndex, 1);
             return 0;
         }
@@ -77,10 +78,10 @@ export class TreeNode<T>
         flattenREC(this, flat)
         return flat;
     }
-    filter(f: (arg: TreeNode<T>) => boolean): TreeNode<T>
-    {
-        // TODO: implement this shit
-    }
+    //filter(f: (arg: TreeNode<T>) => boolean): TreeNode<T>
+    //{
+    //    // TODO: implement this shit
+    //}
     get length(): number 
     {
         let no: number = this.children.length;

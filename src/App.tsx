@@ -115,7 +115,7 @@ export default class App extends Component<{}, { chosenNode: Tree<bleble>, value
                 />
 
                 <label>Selected node: {this.state.chosenNode.data.name} : {this.state.chosenNode.id}</label>
-                <button onClick = { e => this.remove(e) }>Usuń</button>
+                <button onClick = { e => this.remove(e) } disabled = {this.state.chosenNode === this.state.ourTree ? true : false}>Usuń</button>
                 <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
                 <button onClick = { e => this.addCustom(e, this.state.chosenNode.id, this.state.value) }>Dodaj</button>
                 <button onClick = { e => this.editNode(e, this.state.value) }>Edytuj</button>

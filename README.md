@@ -2,6 +2,8 @@
 Essentially a mind map and a todolist 
 
 [![Build Status](https://cloud.drone.io/api/badges/allgreed/lmap/status.svg)](https://cloud.drone.io/allgreed/lmap)
+[![codecov](https://codecov.io/gh/allgreed/lmap/branch/master/graph/badge.svg)](https://codecov.io/gh/allgreed/lmap)
+
 
 ## Prerequisites
 - [nix](https://nixos.org/nix/manual/#chap-installation)

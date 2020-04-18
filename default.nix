@@ -13,5 +13,6 @@ mkShell {
     gnumake
     yarn
     nomad
+    drone-cli
   ];
 }

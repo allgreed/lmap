@@ -51,6 +51,17 @@ steps:
   when:
     branch:
     - master
+
+- name: upload coverage report
+  image: plugins/codecov
+  settings:
+    token:
+      from_secret: codecov_token
+    files:
+      - "*.xml"
+    paths:
+      - coverage
+
 ---
 kind: pipeline
 type: docker

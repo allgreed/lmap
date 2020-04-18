@@ -20,7 +20,7 @@ lint: setup ## run static analysis
 	npx eslint $(LINTED_FILES)
 
 test: setup ## run all tests
-	CI=false $(REACT_APP_CMD) test  # ad hoc fix for warnings
+	CI=false $(REACT_APP_CMD) test --coverage # ad hoc fix for warnings
 
 iterate: ## run tests for TDD iteration
 	$(REACT_APP_CMD) test
@@ -35,6 +35,9 @@ deploy: ## deploy a container to Nomad
 	VERSION=$(VERSION) ./deploy.nomad.tpl > deploy.nomad
 	nomad job run -address=$(NOMAD_URL) deploy.nomad
 
+show-coverage:
+	xdg-open coverage/lcov-report/index.html
+
 
 # Plumbing
 # ###############
@@ -47,8 +50,8 @@ node_modules: package.json yarn.lock
 	touch $@
 	
 clean:
-	rm yarn-error.log
-	rm deploy.nomad
+	rm -f yarn-error.log deploy.nomad
+	rm -rf coverage
 
 # Utilities
 # ###############

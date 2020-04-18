@@ -14,6 +14,9 @@
     "react-tree-graph": "^4.0.1",
     "typescript": "^3.7.2"
   },
+  "jest": {
+    "coverageReporters": ["lcov", "clover"]
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

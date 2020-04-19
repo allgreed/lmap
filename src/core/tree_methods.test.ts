@@ -1,9 +1,8 @@
-import * as tree from "./tree_methods"
+import { makeTree } from "./tree_methods"
 
 interface testData{
     name: string,
 };
-const makeTree = (x: testData) => tree.makeTree<testData>(x);
 
 let treeRoot = makeTree({name: "korzen"})
     .add({name: "notka1"})
@@ -30,8 +29,29 @@ test("add node", () =>
 {
     let root = treeRoot.clone();
     let node = root.children.filter(child => (child.data.name === "notka3"))[0]
-    node.addTree(makeTree({name: "notatka2od3"}));
+    node.add({name: "notatka2od3"});
     expect(node.children.some(child => (child.data.name === "notatka2od3"))).toEqual(true);
+});
+
+test("add tree", () =>
+{
+    // TODO: put the id provider on a class and inject it in one place, not 4
+    const sequentialIdProvider = [1, 2, 3, 4, 22, 33, 44]
+        .reduce((acc, cur) => acc.mockReturnValueOnce(cur), jest.fn())
+
+    const root = makeTree("", sequentialIdProvider); 
+    const initialRootId = root.id;
+    const otherTree = makeTree("other", sequentialIdProvider)
+        .add("adjin", sequentialIdProvider)
+        .add("dwa", sequentialIdProvider);
+    expect(sequentialIdProvider.mock.calls.length).toBe(4);
+
+    root.addTree(otherTree, sequentialIdProvider); 
+
+    expect(sequentialIdProvider.mock.calls.length).toBe(7);
+    expect(root.id).toBe(initialRootId);
+    expect(root.children[0].id).toBe(22);
+    expect(root.children[0].children.map(node => node.id)).toStrictEqual([33, 44]);
 });
 
 test("flatten a tree", () =>

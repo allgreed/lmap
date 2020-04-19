@@ -74,7 +74,7 @@ steps:
 - name: prepare msg
   image: nixos/nix:2.3
   commands:
-  - echo -n "https://github.com/allgreed/lmap/pull/$DRONE_PULL_REQUEST" > msg.tpl
+  - echo -n "Czekirałt&#58; https://github.com/allgreed/lmap/pull/$DRONE_PULL_REQUEST" > msg.tpl
 
 - name: notify
   image: appleboy/drone-telegram

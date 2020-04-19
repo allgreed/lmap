@@ -2,14 +2,14 @@ import * as _ from "lodash";
 
 function id(): number
 {
-    return Math.random()
+    return Math.random();
 }
 
 const treeIdProvider = id;
 
 export function makeTree<T>(data: T, idProvider: () => number = treeIdProvider)
 {
-    return new TreeNode<T>(data, idProvider(), [])
+    return new TreeNode<T>(data, idProvider(), []);
 }
 
 export class TreeNode<T> 
@@ -31,10 +31,11 @@ export class TreeNode<T>
         return this;
     }
 
-    // TODO: get rid of this or reenumerate
-    addTree(node: TreeNode<T>): TreeNode<T> 
+    addTree(node: TreeNode<T>, idProvider: () => number = treeIdProvider): TreeNode<T>
     {
-        this.children.push(node);
+        const nodeToAdd = node._reenumerate(idProvider)
+        this.children.push(nodeToAdd);
+
         return this;
     }
 
@@ -122,5 +123,12 @@ export class TreeNode<T>
         let parent: TreeNode<T>[] = [];
         getParentREC(node, root, parent);
         return parent[0];
+    }
+
+    _reenumerate(idProvider: () => number): TreeNode<T>
+    {
+        this.id = idProvider();
+        this.children.forEach(node => { node._reenumerate(idProvider); });
+        return this;
     }
 }

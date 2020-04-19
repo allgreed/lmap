@@ -7,12 +7,13 @@ function id(): number
 
 const treeIdProvider = id;
 
+// TODO: move this to Tree
 export function makeTree<T>(data: T, idProvider: () => number = treeIdProvider)
 {
     return new TreeNode<T>(data, idProvider(), []);
 }
 
-export class TreeNode<T> 
+class TreeNode<T>
 {
     id: number;
     children: TreeNode<T>[];
@@ -132,3 +133,5 @@ export class TreeNode<T>
         return this;
     }
 }
+
+export type Tree<T> = TreeNode<T>;

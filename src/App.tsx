@@ -1,10 +1,10 @@
 import { URL, Name, Resource } from "./core/main";
-import { TreeNode, makeTree} from "./core/tree_methods";
+import { Tree, makeTree} from "./core/tree_methods";
 import React, { Component } from "react";
 import "./App.css";
 import "react-tree-graph/dist/style.css";
 
-const Tree:any = require("react-tree-graph"); // missing external types, haxing it'!
+const ReactTreeGraph:any = require("react-tree-graph"); // missing external types, haxing it'!
 
 
 interface ReactTreeGraphNode {
@@ -17,7 +17,7 @@ interface bleble {
     name: string,
 }
 
-function displayTree(t: TreeNode<bleble>): ReactTreeGraphNode
+function displayTree(t: Tree<bleble>): ReactTreeGraphNode
 {
     const result: ReactTreeGraphNode = {
         name: t.data.name,
@@ -33,7 +33,7 @@ function displayTree(t: TreeNode<bleble>): ReactTreeGraphNode
     return result;
 }
 
-export default class App extends Component<{}, { chosenNode: TreeNode<bleble>, value: string, count: number, ourTree: TreeNode<bleble>}>
+export default class App extends Component<{}, { chosenNode: Tree<bleble>, value: string, count: number, ourTree: Tree<bleble>}>
 {
     constructor(props: any)
     {
@@ -104,7 +104,7 @@ export default class App extends Component<{}, { chosenNode: TreeNode<bleble>, v
     {
         return (
             <div className="App">
-                <Tree
+                <ReactTreeGraph
                     data={displayTree(this.state.ourTree)}
                     gProps={{
                         onClick: this.selectNode.bind(this)

@@ -9,7 +9,7 @@ const Tree:any = require("react-tree-graph"); // missing external types, haxing 
 
 interface ReactTreeGraphNode {
     name: string,
-    id: string,
+    id: number,
     children: Array<ReactTreeGraphNode>,
 }
 
@@ -67,7 +67,7 @@ export default class App extends Component<{}, { chosenNode: TreeNode<bleble>, v
     }
 
 
-    addCustom(event: any, node_id: string, value: string)
+    addCustom(event: any, node_id: number, value: string)
     {
         this.state.ourTree.flatten().filter(n => n.id === node_id)[0].add({name: value})
 
@@ -83,7 +83,7 @@ export default class App extends Component<{}, { chosenNode: TreeNode<bleble>, v
         })
     }
 
-    selectNode(event: any, node_id: string) 
+    selectNode(event: any, node_id: number)
     {
         this.setState({
             chosenNode: node_id === this.state.ourTree.id ? this.state.ourTree : this.state.ourTree.flatten().filter(n => n.id === node_id)[0]

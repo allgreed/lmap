@@ -1,47 +1,52 @@
 import * as _ from "lodash";
 
-function id(): string 
+function id(): number
 {
-    return Math.random()
-        .toString(36)
-        .substr(2, 9);
+    return Math.random();
 }
 
 const treeIdProvider = id;
 
-export function makeTree<T>(data: T, idProvider: () => string = treeIdProvider)
+// TODO: move this to Tree
+export function makeTree<T>(data: T, idProvider: () => number = treeIdProvider)
 {
-    return new TreeNode<T>(data, treeIdProvider(), [])
+    return new TreeNode<T>(data, idProvider(), []);
 }
 
-export class TreeNode<T> 
+class TreeNode<T>
 {
-    id: string;
+    id: number;
     children: TreeNode<T>[];
     data: T;
 
-    constructor(data: T, id: string, children: TreeNode<T>[] = []) 
+    constructor(data: T, id: number, children: TreeNode<T>[] = [])
     {
         this.data = data;
         this.id = id;
         this.children = children;
     }
-    add(data: T, idProvider: () => string = treeIdProvider): TreeNode<T> 
+
+    add(data: T, idProvider: () => number = treeIdProvider): TreeNode<T>
     {
         this.children.push(makeTree<T>(data, idProvider));
         return this;
     }
-    addTree(node: TreeNode<T>): TreeNode<T> 
+
+    addTree(node: TreeNode<T>, idProvider: () => number = treeIdProvider): TreeNode<T>
     {
-        this.children.push(node);
+        const nodeToAdd = node._reenumerate(idProvider)
+        this.children.push(nodeToAdd);
+
         return this;
     }
+
     removeTree(node: TreeNode<T>) 
     {
         //remove node with children
         let chosenChildIndex = node.children.findIndex(child => child === node);
         this.children.splice(chosenChildIndex, 1);
     }
+
     removeNode(node: TreeNode<T>): number 
     {
         // TODO: Make it better, use getParent or add parent field to node
@@ -60,10 +65,12 @@ export class TreeNode<T>
             return -1;
         }
     }
-    clone() 
+
+    clone()
     {
         return _.cloneDeep(this);
     }
+
     flatten(): TreeNode<T>[]
     {
         const flat: TreeNode<T>[] = [this];
@@ -78,10 +85,12 @@ export class TreeNode<T>
         flattenREC(this, flat)
         return flat;
     }
+
     //filter(f: (arg: TreeNode<T>) => boolean): TreeNode<T>
     //{
     //    // TODO: implement this shit
     //}
+
     get length(): number 
     {
         let no: number = this.children.length;
@@ -91,6 +100,7 @@ export class TreeNode<T>
         });
         return no;
     }
+
     getParent<T>(
         node: TreeNode<T>,
         root: TreeNode<T>
@@ -115,4 +125,13 @@ export class TreeNode<T>
         getParentREC(node, root, parent);
         return parent[0];
     }
+
+    _reenumerate(idProvider: () => number): TreeNode<T>
+    {
+        this.id = idProvider();
+        this.children.forEach(node => { node._reenumerate(idProvider); });
+        return this;
+    }
 }
+
+export type Tree<T> = TreeNode<T>;

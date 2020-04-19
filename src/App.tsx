@@ -69,18 +69,30 @@ export default class App extends Component<{}, { chosenNode: Tree<bleble>, value
 
     addCustom(event: any, node_id: number, value: string)
     {
-        this.state.ourTree.flatten().filter(n => n.id === node_id)[0].add({name: value})
-
+        this.state.ourTree.flatten().filter(n => n.id === node_id)[0].add({name: value});
+        this.forceUpdate();
     }
 
     remove(event: any)
     {
-        this.state.ourTree.getParent(this.state.chosenNode, this.state.ourTree).removeNode(this.state.chosenNode)
+        if(this.isRoot(this.state.chosenNode.id))
+        {
+            throw new Error("Cannot delete root node");
+        }
+        else
+        {
+            this.state.ourTree.getParent(this.state.chosenNode, this.state.ourTree).removeNode(this.state.chosenNode)
 
-        this.setState({
-            ourTree: this.state.ourTree,
-            chosenNode: this.state.ourTree
-        })
+            this.setState({
+                ourTree: this.state.ourTree,
+                chosenNode: this.state.ourTree
+            })
+        }
+    }
+
+    isRoot(node_id: number): boolean
+    {
+        return this.state.chosenNode === this.state.ourTree;
     }
 
     selectNode(event: any, node_id: number)
@@ -115,7 +127,7 @@ export default class App extends Component<{}, { chosenNode: Tree<bleble>, value
                 />
 
                 <label>Selected node: {this.state.chosenNode.data.name} : {this.state.chosenNode.id}</label>
-                <button onClick = { e => this.remove(e) } disabled = {this.state.chosenNode === this.state.ourTree ? true : false}>Usuń</button>
+                <button onClick = { e => this.remove(e) } disabled = {this.isRoot(this.state.chosenNode.id) ? true : false}>Usuń</button>
                 <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
                 <button onClick = { e => this.addCustom(e, this.state.chosenNode.id, this.state.value) }>Dodaj</button>
                 <button onClick = { e => this.editNode(e, this.state.value) }>Edytuj</button>

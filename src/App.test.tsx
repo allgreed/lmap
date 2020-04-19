@@ -8,3 +8,10 @@ it("renders without crashing", () =>
     ReactDOM.render(<App />, div);
     ReactDOM.unmountComponentAtNode(div);
 });
+
+// test("does not allow to remove root node", () =>
+// {
+//     const div = document.createElement("div");
+//     ReactDOM.render(<App />, div);
+//     expect().toThrowError("Cannot delete root node")
+// });

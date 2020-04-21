@@ -1,5 +1,5 @@
 import { URL, Name, Resource } from "./core/main";
-import { Tree, makeTree, TreeNode } from "./core/tree_methods";
+import { Tree, makeTree, TreeNode, NodeID } from "./core/tree";
 import React, { Component } from "react";
 import "./App.css";
 import "react-tree-graph/dist/style.css";
@@ -9,7 +9,7 @@ const ReactTreeGraph:any = require("react-tree-graph"); // missing external type
 
 interface ReactTreeGraphNode {
     name: string,
-    id: number,
+    id: NodeID,
     children: Array<ReactTreeGraphNode>,
 }
 
@@ -38,31 +38,31 @@ function displayTree(t: Tree<bleble>): ReactTreeGraphNode
     return _displayTree(t.root);
 }
 
-// TODO: use NodeID type instead of bare number
-export default class App extends Component<{}, { chosenNode: number, value: string, count: number, ourTree: Tree<bleble>}>
+export default class App extends Component<{}, { chosenNode: NodeID, value: string, ourTree: Tree<bleble>}>
 {
     constructor(props: any)
     {
         super(props);
+
+        const ourTree = makeTree({name: "korzen"})
+            .addToRoot({name: "notka1"})
+            .addToRoot({name: "notka2"})
+            .addTreeToRoot(makeTree({name: "notka3"})
+                .addToRoot({name: "notka1od3"})
+                .addToRoot({name: "notka2od3"}))
+            .addTreeToRoot(makeTree({name: "notka4"})
+                .addToRoot({name: "notka1od4"})
+                .addToRoot({name: "notka2od4"})
+                .addTreeToRoot(makeTree({name: "notka3od4"})
+                    .addToRoot({name: "notka1od34"})
+                    .addToRoot({name: "notka2od34"}))
+                .addToRoot({name: "notka5"}))
+        ;
+
         this.state= {
-            // TODO: replace with a proper[ty] xD
-            chosenNode: Number.MIN_SAFE_INTEGER,
             value: "Name",
-            count:0,
-            ourTree: makeTree({name: "korzen"})
-                .addToRoot({name: "notka1"})
-                .addToRoot({name: "notka2"})
-                .addTreeToRoot(makeTree({name: "notka3"})
-                    .addToRoot({name: "notka1od3"})
-                    .addToRoot({name: "notka2od3"}))
-                .addTreeToRoot(makeTree({name: "notka4"})
-                    .addToRoot({name: "notka1od4"})
-                    .addToRoot({name: "notka2od4"})
-                    .addTreeToRoot(makeTree({name: "notka3od4"})
-                        .addToRoot({name: "notka1od34"})
-                        .addToRoot({name: "notka2od34"}))
-                    .addToRoot({name: "notka5"})),
-        
+            chosenNode: ourTree.root.id,
+            ourTree,
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -74,7 +74,7 @@ export default class App extends Component<{}, { chosenNode: number, value: stri
         event.preventDefault();
     }
 
-    addCustom(event: any, node_id: number, value: string)
+    addCustom(event: any, node_id: NodeID, value: string)
     {
         this.state.ourTree.add(node_id, {name: value});
 
@@ -91,7 +91,7 @@ export default class App extends Component<{}, { chosenNode: number, value: stri
         });
     }
 
-    selectNode(event: any, node_id: number)
+    selectNode(event: any, node_id: NodeID)
     {
         this.setState({
             chosenNode: node_id,

@@ -1,4 +1,4 @@
-import { Tree, makeTree } from "./tree_methods"
+import { Tree, makeTree, treeIdProvider } from "./tree"
 
 interface testData{
     name: string,
@@ -39,19 +39,22 @@ test("add node", () =>
 
 test("add tree", () =>
 {
-    const sequentialIdProvider = [3, 4, 22, 33, 44]
-        .reduce((acc, cur) => acc.mockReturnValueOnce(cur), jest.fn())
-    const _makeTree = _ => makeTree(_, { idProvider: sequentialIdProvider });
+    const sequentialIdProviderFn = [0, 1, 2, 0, 22, 33, 44]
+        .reduce((acc, cur) => acc.mockReturnValueOnce(cur), jest.fn());
+    const mockIdProvider = {
+        generate: sequentialIdProviderFn,
+    };
+    const _makeTree = _ => makeTree(_, { idProvider: mockIdProvider });
 
-    const otherTree = _makeTree("other")
+    const otherTree = _makeTree("other", { idProvider: mockIdProvider })
         .addToRoot("adjin")
         .addToRoot("dwa");
-    expect(sequentialIdProvider.mock.calls.length).toBe(2);
+    expect(sequentialIdProviderFn.mock.calls.length).toBe(3);
 
-    const tree = _makeTree("").addTreeToRoot(otherTree, sequentialIdProvider);
+    const tree = _makeTree("").addTreeToRoot(otherTree, mockIdProvider);
 
-    expect(sequentialIdProvider.mock.calls.length).toBe(5);
-    expect(tree.flatten().sort().map(node => node.id)).toStrictEqual([-9007199254740991, 22, 33, 44]);
+    expect(sequentialIdProviderFn.mock.calls.length).toBe(7);
+    expect(tree.flatten().sort().map(node => node.id)).toStrictEqual([0, 22, 33, 44]);
 });
 
 test("flatten a tree", () =>
@@ -98,4 +101,12 @@ test("remove node", () =>
     expect(parent.children.some(child => child.data.name === "notka3od4")).toEqual(false);
     // TODO: check rest of the tree, check order of items in tree
     //expect(parent.children).toEqual(expect.arrayContaining(xChildren));
+});
+
+test("root ID can be recognized", () =>
+{
+    const idProvider = new treeIdProvider();
+
+    expect(idProvider.isRootId(idProvider.generate())).toBe(true); // first ID is the root ID
+    expect(idProvider.isRootId(idProvider.generate())).toBe(false); // the following are not
 });

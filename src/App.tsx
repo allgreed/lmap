@@ -1,5 +1,5 @@
 import { URL, Name, Resource } from "./core/main";
-import { Tree, makeTree, TreeNode } from "./core/tree";
+import { Tree, makeTree, TreeNode, NodeID } from "./core/tree";
 import React, { Component } from "react";
 import "./App.css";
 import "react-tree-graph/dist/style.css";
@@ -9,7 +9,7 @@ const ReactTreeGraph:any = require("react-tree-graph"); // missing external type
 
 interface ReactTreeGraphNode {
     name: string,
-    id: number,
+    id: NodeID,
     children: Array<ReactTreeGraphNode>,
 }
 
@@ -38,8 +38,7 @@ function displayTree(t: Tree<bleble>): ReactTreeGraphNode
     return _displayTree(t.root);
 }
 
-// TODO: use NodeID type instead of bare number
-export default class App extends Component<{}, { chosenNode: number, value: string, ourTree: Tree<bleble>}>
+export default class App extends Component<{}, { chosenNode: NodeID, value: string, ourTree: Tree<bleble>}>
 {
     constructor(props: any)
     {
@@ -75,7 +74,7 @@ export default class App extends Component<{}, { chosenNode: number, value: stri
         event.preventDefault();
     }
 
-    addCustom(event: any, node_id: number, value: string)
+    addCustom(event: any, node_id: NodeID, value: string)
     {
         this.state.ourTree.add(node_id, {name: value});
 
@@ -92,7 +91,7 @@ export default class App extends Component<{}, { chosenNode: number, value: stri
         });
     }
 
-    selectNode(event: any, node_id: number)
+    selectNode(event: any, node_id: NodeID)
     {
         this.setState({
             chosenNode: node_id,

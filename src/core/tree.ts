@@ -1,17 +1,19 @@
 import * as _ from "lodash";
 
 
-// TODO: use NodeID type instead of bare number
+export type NodeID = number;
+
+
 export class treeIdProvider
 {
-    next_id: number;
+    next_id: NodeID;
 
-    constructor(next_id: number = Number.MIN_SAFE_INTEGER)
+    constructor(next_id: NodeID = Number.MIN_SAFE_INTEGER)
     {
         this.next_id = next_id;
     }
 
-    generate(): number
+    generate(): NodeID
     {
         const current_id = this.next_id;
 
@@ -22,9 +24,9 @@ export class treeIdProvider
         return current_id;
     }
 
-    isRootId(id: number): boolean
+    isRootId(x: NodeID): boolean
     {
-        return id === Number.MIN_SAFE_INTEGER;
+        return x === Number.MIN_SAFE_INTEGER;
     }
 }
 
@@ -41,8 +43,7 @@ export class Tree<T>
         this.dependencies = dependencies;
     }
 
-    // TODO: use NodeID type instead of bare number
-    add(where: number, data: T): Tree<T>
+    add(where: NodeID, data: T): Tree<T>
     {
         const targetNode = this._selectNodeById(where);
         targetNode._append(new TreeNode(this.dependencies.idProvider.generate(), data, []));
@@ -64,8 +65,7 @@ export class Tree<T>
         return this;
     }
 
-    // TODO: use NodeID type instead of bare number
-    removeNode(which: number): Tree<T>
+    removeNode(which: NodeID): Tree<T>
     {
         // TODO: unfuck this
         const toBeRemoved = this._selectNodeById(which);
@@ -89,9 +89,8 @@ export class Tree<T>
         return this.root.length;
     }
 
-    // TODO: use NodeID type instead of bare number
     // TODO: optional? - undo the ignore
-    _selectNodeById(target_id: number): TreeNode<T>
+    _selectNodeById(target_id: NodeID): TreeNode<T>
     {
         // @ts-ignore
         return this.root.flatten().find(node => node.id === target_id);
@@ -116,11 +115,11 @@ export function makeTree<T>(data: T, dependenciesOverride = {}): Tree<T>
 // TODO: get rid of this export
 export class TreeNode<T>
 {
-    id: number;
+    id: NodeID;
     children: TreeNode<T>[];
     data: T;
 
-    constructor(id: number, data: T, children: TreeNode<T>[] = [])
+    constructor(id: NodeID, data: T, children: TreeNode<T>[] = [])
     {
         this.data = data;
         this.id = id;
@@ -218,7 +217,7 @@ export class TreeNode<T>
         return parent[0];
     }
 
-    _reenumerate(idProvider: () => number): TreeNode<T>
+    _reenumerate(idProvider: () => NodeID): TreeNode<T>
     {
         this.id = idProvider();
         this.children.forEach(node => { node._reenumerate(idProvider); });

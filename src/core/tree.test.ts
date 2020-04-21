@@ -1,4 +1,4 @@
-import { Tree, makeTree, treeIdProvider } from "./tree_methods"
+import { Tree, makeTree, treeIdProvider } from "./tree"
 
 interface testData{
     name: string,

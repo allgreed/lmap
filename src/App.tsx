@@ -1,5 +1,5 @@
 import { URL, Name, Resource } from "./core/main";
-import { Tree, makeTree, TreeNode } from "./core/tree_methods";
+import { Tree, makeTree, TreeNode } from "./core/tree";
 import React, { Component } from "react";
 import "./App.css";
 import "react-tree-graph/dist/style.css";

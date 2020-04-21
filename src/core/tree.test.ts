@@ -1,4 +1,4 @@
-import { Tree, makeTree, treeIdProvider } from "./tree"
+import { Tree, makeTree, TreeIdProvider } from "./tree"
 
 interface testData{
     name: string,
@@ -105,8 +105,53 @@ test("remove node", () =>
 
 test("root ID can be recognized", () =>
 {
-    const idProvider = new treeIdProvider();
+    const idProvider = new TreeIdProvider();
 
     expect(idProvider.isRootId(idProvider.generate())).toBe(true); // first ID is the root ID
     expect(idProvider.isRootId(idProvider.generate())).toBe(false); // the following are not
+});
+
+test("the ID rolls over", () =>
+{
+    const idProvider = new TreeIdProvider(new TreeIdProvider().UPPER_ID_BOUND);
+
+    expect(() => 
+    {
+        idProvider.generate();
+    }).toThrow();
+
+    expect(idProvider.generate()).toBe(idProvider.LOWER_ID_BOUND);
+});
+
+test("tree IDs are rebuilt upon overflow", () =>
+{
+    // don't want to instantiate 18 quadrilion objects for every test run
+    class MockTreeIdProvider extends TreeIdProvider
+    {
+        constructor()
+        {
+            super();
+
+            this.LOWER_ID_BOUND = 0;
+            this.UPPER_ID_BOUND = 5;
+            this.ROOT_ID = this.LOWER_ID_BOUND;
+
+            this.next_id = this.ROOT_ID;
+        }
+    }
+    const tree = makeTree("", { idProvider: new MockTreeIdProvider() });
+
+    tree
+        .add(0, "")
+        .add(0, "")
+        .add(0, "")
+        .add(0, "") // 4 nodes
+        .removeNode(1)
+        .removeNode(2) // 2 nodes left
+        .add(0, "latest")
+    ;
+
+    const latestNode = tree.flatten().find(node => node.data === "latest");
+
+    expect(latestNode.id).toBe(3);
 });

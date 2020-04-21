@@ -66,7 +66,7 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
             ourTree,
         };
         this.handleChange = this.handleChange.bind(this);
-        this.delayedResize = this.delayedResize.bind(this);
+        this.debouncedHandleResize = this.debouncedHandleResize.bind(this);
     }
 
     // TODO: ffs
@@ -111,21 +111,16 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
 
     }
 
-    handleResize()
-    {
-        this.forceUpdate();
-    }
-
-    delayedResize = debounce(this.handleResize, 200);
+    debouncedHandleResize = debounce(() => this.forceUpdate(), 200);
 
     componentDidMount()
     {
-        window.addEventListener("resize", this.delayedResize);
+        window.addEventListener("resize", this.debouncedHandleResize);
     }
 
     componentWillUnmount()
     {
-        window.removeEventListener("resize", this.delayedResize);
+        window.removeEventListener("resize", this.debouncedHandleResize);
     }
 
     render()

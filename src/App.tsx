@@ -1,6 +1,7 @@
 import { URL, Name, Resource } from "./core/main";
 import { Tree, makeTree, TreeNode, NodeID } from "./core/tree";
 import React, { Component } from "react";
+import { debounce } from "lodash";
 import "./App.css";
 import "react-tree-graph/dist/style.css";
 
@@ -65,6 +66,7 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
             ourTree,
         };
         this.handleChange = this.handleChange.bind(this);
+        this.delayedResize = this.delayedResize.bind(this);
     }
 
     // TODO: ffs
@@ -111,17 +113,19 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
 
     handleResize()
     {
-        this.setState(prevState => prevState);
+        this.forceUpdate();
     }
+
+    delayedResize = debounce(this.handleResize, 200);
 
     componentDidMount()
     {
-        window.addEventListener("resize", this.handleResize.bind(this));
+        window.addEventListener("resize", this.delayedResize);
     }
 
     componentWillUnmount()
     {
-        window.removeEventListener("resize", this.handleResize.bind(this));
+        window.removeEventListener("resize", this.delayedResize);
     }
 
     render()

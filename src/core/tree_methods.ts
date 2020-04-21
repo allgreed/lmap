@@ -1,11 +1,117 @@
 import * as _ from "lodash";
 
-function id(): number
+
+// TODO: use NodeID type instead of bare number
+export class treeIdProvider
 {
-    return Math.random();
+    next_id: number;
+
+    constructor(next_id: number = Number.MIN_SAFE_INTEGER)
+    {
+        this.next_id = next_id;
+    }
+
+    generate(): number
+    {
+        const current_id = this.next_id;
+
+        // TODO: roll over
+        // TODO: safety checks - if the tree is too big - [to xd] fail
+        this.next_id += 1;
+
+        return current_id;
+    }
+
+    isRootId(id: number): boolean
+    {
+        return id === Number.MIN_SAFE_INTEGER;
+    }
 }
 
-const treeIdProvider = id;
+
+export class Tree<T>
+{
+    root: TreeNode<T>;
+    // TODO: unfuck this
+    dependencies: any;
+
+    constructor(root: TreeNode<T>, dependencies = {})
+    {
+        this.root = root;
+        this.dependencies = dependencies;
+    }
+
+    // TODO: use NodeID type instead of bare number
+    add(where: number, data: T): Tree<T>
+    {
+        const targetNode = this._selectNodeById(where);
+        targetNode._append(new TreeNode(this.dependencies.idProvider.generate(), data, []));
+
+        return this;
+    }
+
+    // TODO: find a better methods for creating tree literals
+    addToRoot(data: T): Tree<T>
+    {
+        this.add(this.root.id, data);
+        return this;
+    }
+    //
+    // TODO: find a better methods for creating tree literals
+    addTreeToRoot(t: Tree<T>): Tree<T>
+    {
+        this.root._append(t.root._reenumerate(this.dependencies.idProvider.generate.bind(this.dependencies.idProvider)))
+        return this;
+    }
+
+    // TODO: use NodeID type instead of bare number
+    removeNode(which: number): Tree<T>
+    {
+        // TODO: unfuck this
+        const toBeRemoved = this._selectNodeById(which);
+        this.root.getParent(toBeRemoved, this.root).removeNode(toBeRemoved);
+
+        return this;
+    }
+
+    flatten()
+    {
+        return this.root.flatten();
+    }
+
+    clone(): Tree<T>
+    {
+        return new Tree<T>(this.root.clone(), this.dependencies);
+    }
+
+    get length(): number
+    {
+        return this.root.length;
+    }
+
+    // TODO: use NodeID type instead of bare number
+    // TODO: optional? - undo the ignore
+    _selectNodeById(target_id: number): TreeNode<T>
+    {
+        // @ts-ignore
+        return this.root.flatten().find(node => node.id === target_id);
+    }
+}
+
+
+// TODO: move this to Tree
+export function makeTree<T>(data: T, dependenciesOverride = {}): Tree<T>
+{
+    const dependencies = {
+        idProvider: new treeIdProvider(),
+        ...dependenciesOverride,
+    };
+
+    const root = new TreeNode<T>(dependencies.idProvider.generate(), data, []);
+
+    return new Tree<T>(root, dependencies);
+}
+
 
 // TODO: get rid of this export
 export class TreeNode<T>
@@ -118,84 +224,4 @@ export class TreeNode<T>
         this.children.forEach(node => { node._reenumerate(idProvider); });
         return this;
     }
-}
-
-export class Tree<T>
-{
-    root: TreeNode<T>;
-    // TODO: unfuck this
-    dependencies: any;
-
-    constructor(root: TreeNode<T>, dependenciesOverride = {})
-    {
-        this.root = root;
-        this.dependencies = {
-            idProvider: treeIdProvider,
-            ...dependenciesOverride
-        };
-    }
-
-    // TODO: use NodeID type instead of bare number
-    add(where: number, data: T): Tree<T>
-    {
-        const targetNode = this._selectNodeById(where);
-        targetNode._append(new TreeNode(this.dependencies.idProvider(), data, []));
-
-        return this;
-    }
-
-    // TODO: find a better methods for creating tree literals
-    addToRoot(data: T): Tree<T>
-    {
-        this.add(this.root.id, data);
-        return this;
-    }
-    //
-    // TODO: find a better methods for creating tree literals
-    addTreeToRoot(t: Tree<T>): Tree<T>
-    {
-        this.root._append(t.root._reenumerate(this.dependencies.idProvider))
-        return this;
-    }
-
-    // TODO: use NodeID type instead of bare number
-    removeNode(which: number): Tree<T>
-    {
-        // TODO: unfuck this
-        const toBeRemoved = this._selectNodeById(which);
-        this.root.getParent(toBeRemoved, this.root).removeNode(toBeRemoved);
-
-        return this;
-    }
-
-    flatten()
-    {
-        return this.root.flatten();
-    }
-
-    clone(): Tree<T>
-    {
-        return new Tree<T>(this.root.clone(), this.dependencies);
-    }
-
-    get length(): number
-    {
-        return this.root.length;
-    }
-
-    // TODO: use NodeID type instead of bare number
-    // TODO: optional? - undo the ignore
-    _selectNodeById(target_id: number): TreeNode<T>
-    {
-        // @ts-ignore
-        return this.root.flatten().find(node => node.id === target_id);
-    }
-}
-
-// TODO: move this to Tree
-export function makeTree<T>(data: T, dependenciesOverride = {}): Tree<T>
-{
-    // TODO: extract this as const of initial
-    const root = new TreeNode<T>(Number.MIN_SAFE_INTEGER, data, []);
-    return new Tree<T>(root, dependenciesOverride);
 }

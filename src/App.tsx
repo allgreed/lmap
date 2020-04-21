@@ -39,30 +39,31 @@ function displayTree(t: Tree<bleble>): ReactTreeGraphNode
 }
 
 // TODO: use NodeID type instead of bare number
-export default class App extends Component<{}, { chosenNode: number, value: string, count: number, ourTree: Tree<bleble>}>
+export default class App extends Component<{}, { chosenNode: number, value: string, ourTree: Tree<bleble>}>
 {
     constructor(props: any)
     {
         super(props);
+
+        const ourTree = makeTree({name: "korzen"})
+            .addToRoot({name: "notka1"})
+            .addToRoot({name: "notka2"})
+            .addTreeToRoot(makeTree({name: "notka3"})
+                .addToRoot({name: "notka1od3"})
+                .addToRoot({name: "notka2od3"}))
+            .addTreeToRoot(makeTree({name: "notka4"})
+                .addToRoot({name: "notka1od4"})
+                .addToRoot({name: "notka2od4"})
+                .addTreeToRoot(makeTree({name: "notka3od4"})
+                    .addToRoot({name: "notka1od34"})
+                    .addToRoot({name: "notka2od34"}))
+                .addToRoot({name: "notka5"}))
+        ;
+
         this.state= {
-            // TODO: replace with a proper[ty] xD
-            chosenNode: Number.MIN_SAFE_INTEGER,
             value: "Name",
-            count:0,
-            ourTree: makeTree({name: "korzen"})
-                .addToRoot({name: "notka1"})
-                .addToRoot({name: "notka2"})
-                .addTreeToRoot(makeTree({name: "notka3"})
-                    .addToRoot({name: "notka1od3"})
-                    .addToRoot({name: "notka2od3"}))
-                .addTreeToRoot(makeTree({name: "notka4"})
-                    .addToRoot({name: "notka1od4"})
-                    .addToRoot({name: "notka2od4"})
-                    .addTreeToRoot(makeTree({name: "notka3od4"})
-                        .addToRoot({name: "notka1od34"})
-                        .addToRoot({name: "notka2od34"}))
-                    .addToRoot({name: "notka5"})),
-        
+            chosenNode: ourTree.root.id,
+            ourTree,
         };
         this.handleChange = this.handleChange.bind(this);
     }

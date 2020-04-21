@@ -18,7 +18,6 @@ export class treeIdProvider
         const current_id = this.next_id;
 
         // TODO: roll over
-        // TODO: safety checks - if the tree is too big - [to xd] fail
         this.next_id += 1;
 
         return current_id;

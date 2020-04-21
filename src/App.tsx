@@ -109,6 +109,21 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
 
     }
 
+    handleResize()
+    {
+        this.setState(prevState => prevState);
+    }
+
+    componentDidMount()
+    {
+        window.addEventListener("resize", this.handleResize.bind(this));
+    }
+
+    componentWillUnmount()
+    {
+        window.removeEventListener("resize", this.handleResize.bind(this));
+    }
+
     render()
     {
         return (

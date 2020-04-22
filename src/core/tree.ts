@@ -4,52 +4,6 @@ import * as _ from "lodash";
 export type NodeID = number;
 
 
-export class TreeIdProvider
-{
-    LOWER_ID_BOUND: number;
-    UPPER_ID_BOUND: number;
-    ROOT_ID: number;
-
-    next_id: number;
-
-    constructor(next_id: NodeID = NaN)
-    {
-        this.LOWER_ID_BOUND = Number.MIN_SAFE_INTEGER;
-        this.UPPER_ID_BOUND = Number.MAX_SAFE_INTEGER;
-        this.ROOT_ID = this.LOWER_ID_BOUND;
-
-        this.next_id = isNaN(next_id)
-            ? this.ROOT_ID
-            : next_id
-        ;
-    }
-
-    generate(): NodeID
-    {
-        const current_id = this.next_id;
-
-        if (current_id === this.UPPER_ID_BOUND)
-        {
-            this.next_id = this.ROOT_ID;
-
-            const err = new Error("ID has overflown");
-            err.name = "ID_OVERFLOW"
-
-            throw err;
-        }
-
-        this.next_id = current_id + 1;
-
-        return current_id;
-    }
-
-    isRootId(x: NodeID): boolean
-    {
-        return x === this.ROOT_ID;
-    }
-}
-
-
 export class Tree<T>
 {
     root: TreeNode<T>;
@@ -263,3 +217,50 @@ export class TreeNode<T>
         return this;
     }
 }
+
+export class TreeIdProvider
+{
+    LOWER_ID_BOUND: number;
+    UPPER_ID_BOUND: number;
+    ROOT_ID: number;
+
+    next_id: number;
+
+    constructor(next_id: NodeID = NaN)
+    {
+        this.LOWER_ID_BOUND = Number.MIN_SAFE_INTEGER;
+        this.UPPER_ID_BOUND = Number.MAX_SAFE_INTEGER;
+        this.ROOT_ID = this.LOWER_ID_BOUND;
+
+        this.next_id = isNaN(next_id)
+            ? this.ROOT_ID
+            : next_id
+        ;
+    }
+
+    generate(): NodeID
+    {
+        const current_id = this.next_id;
+
+        if (current_id === this.UPPER_ID_BOUND)
+        {
+            this.next_id = this.ROOT_ID;
+
+            const err = new Error("ID has overflown");
+            err.name = "ID_OVERFLOW"
+
+            throw err;
+        }
+
+        this.next_id = current_id + 1;
+
+        return current_id;
+    }
+
+    isRootId(x: NodeID): boolean
+    {
+        return x === this.ROOT_ID;
+    }
+}
+
+

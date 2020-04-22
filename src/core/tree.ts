@@ -32,7 +32,7 @@ export class Tree<T>
                 throw err;
             }
 
-            this.root._reenumerate(this.dependencies.idProvider.generate.bind(this.dependencies.idProvider));
+            this.root._reenumerate(this.dependencies.idProvider.generate);
             newId = this.dependencies.idProvider.generate();
         }
         finally
@@ -54,7 +54,9 @@ export class Tree<T>
     addTreeToRoot(t: Tree<T>): Tree<T>
     {
         // might be unsafe, please use only for creating literals
-        this.root._append(t.root._reenumerate(this.dependencies.idProvider.generate.bind(this.dependencies.idProvider)))
+        this.root._append(
+            t.root._reenumerate(this.dependencies.idProvider.generate))
+
         return this;
     }
 
@@ -98,6 +100,9 @@ export function makeTree<T>(data: T, dependenciesOverride = {}): Tree<T>
         idProvider: new TreeIdProvider(),
         ...dependenciesOverride,
     };
+
+    // emulate a bound method for implementation convenience 
+    dependencies.idProvider.generate = dependencies.idProvider.generate.bind(dependencies.idProvider)
 
     const root = new TreeNode<T>(dependencies.idProvider.generate(), data, []);
 

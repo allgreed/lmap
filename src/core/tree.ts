@@ -4,59 +4,13 @@ import * as _ from "lodash";
 export type NodeID = number;
 
 
-export class TreeIdProvider
-{
-    LOWER_ID_BOUND: number;
-    UPPER_ID_BOUND: number;
-    ROOT_ID: number;
-
-    next_id: number;
-
-    constructor(next_id: NodeID = NaN)
-    {
-        this.LOWER_ID_BOUND = Number.MIN_SAFE_INTEGER;
-        this.UPPER_ID_BOUND = Number.MAX_SAFE_INTEGER;
-        this.ROOT_ID = this.LOWER_ID_BOUND;
-
-        this.next_id = isNaN(next_id)
-            ? this.ROOT_ID
-            : next_id
-        ;
-    }
-
-    generate(): NodeID
-    {
-        const current_id = this.next_id;
-
-        if (current_id === this.UPPER_ID_BOUND)
-        {
-            this.next_id = this.ROOT_ID;
-
-            const err = new Error("ID has overflown");
-            err.name = "ID_OVERFLOW"
-
-            throw err;
-        }
-
-        this.next_id = current_id + 1;
-
-        return current_id;
-    }
-
-    isRootId(x: NodeID): boolean
-    {
-        return x === this.ROOT_ID;
-    }
-}
-
-
 export class Tree<T>
 {
     root: TreeNode<T>;
     // TODO: unfuck this
     dependencies: any;
 
-    constructor(root: TreeNode<T>, dependencies = {})
+    constructor(root: TreeNode<T>, dependencies: any)
     {
         this.root = root;
         this.dependencies = dependencies;
@@ -78,7 +32,7 @@ export class Tree<T>
                 throw err;
             }
 
-            this.root._reenumerate(this.dependencies.idProvider.generate.bind(this.dependencies.idProvider));
+            this.root._reenumerate(this.dependencies.idProvider.generate);
             newId = this.dependencies.idProvider.generate();
         }
         finally
@@ -100,7 +54,9 @@ export class Tree<T>
     addTreeToRoot(t: Tree<T>): Tree<T>
     {
         // might be unsafe, please use only for creating literals
-        this.root._append(t.root._reenumerate(this.dependencies.idProvider.generate.bind(this.dependencies.idProvider)))
+        this.root._append(
+            t.root._reenumerate(this.dependencies.idProvider.generate))
+
         return this;
     }
 
@@ -144,6 +100,9 @@ export function makeTree<T>(data: T, dependenciesOverride = {}): Tree<T>
         idProvider: new TreeIdProvider(),
         ...dependenciesOverride,
     };
+
+    // emulate a bound method for implementation convenience 
+    dependencies.idProvider.generate = dependencies.idProvider.generate.bind(dependencies.idProvider)
 
     const root = new TreeNode<T>(dependencies.idProvider.generate(), data, []);
 
@@ -263,3 +222,50 @@ export class TreeNode<T>
         return this;
     }
 }
+
+export class TreeIdProvider
+{
+    LOWER_ID_BOUND: number;
+    UPPER_ID_BOUND: number;
+    ROOT_ID: number;
+
+    next_id: number;
+
+    constructor(next_id: NodeID = NaN)
+    {
+        this.LOWER_ID_BOUND = Number.MIN_SAFE_INTEGER;
+        this.UPPER_ID_BOUND = Number.MAX_SAFE_INTEGER;
+        this.ROOT_ID = this.LOWER_ID_BOUND;
+
+        this.next_id = isNaN(next_id)
+            ? this.ROOT_ID
+            : next_id
+        ;
+    }
+
+    generate(): NodeID
+    {
+        const current_id = this.next_id;
+
+        if (current_id === this.UPPER_ID_BOUND)
+        {
+            this.next_id = this.ROOT_ID;
+
+            const err = new Error("ID has overflown");
+            err.name = "ID_OVERFLOW"
+
+            throw err;
+        }
+
+        this.next_id = current_id + 1;
+
+        return current_id;
+    }
+
+    isRootId(x: NodeID): boolean
+    {
+        return x === this.ROOT_ID;
+    }
+}
+
+

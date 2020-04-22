@@ -10,7 +10,7 @@ export class Tree<T>
     // TODO: unfuck this
     dependencies: any;
 
-    constructor(root: TreeNode<T>, dependencies = {})
+    constructor(root: TreeNode<T>, dependencies: any)
     {
         this.root = root;
         this.dependencies = dependencies;

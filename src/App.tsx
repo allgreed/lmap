@@ -1,4 +1,4 @@
-import { URL, Name, Resource } from "./core/main";
+import { URL, Name, Resource } from "./core/resources";
 import { Tree, makeTree, TreeNode, NodeID } from "./core/tree";
 import React, { Component } from "react";
 import { debounce } from "lodash";

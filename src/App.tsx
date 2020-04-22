@@ -78,8 +78,7 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
 
     addCustom(event: any, node_id: NodeID, value: string)
     {
-        this.state.ourTree.add(node_id, {name: value});
-
+        this.setState({ourTree: this.state.ourTree.add(node_id, {name: value})});
     }
 
     remove(event: any)

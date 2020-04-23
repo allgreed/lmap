@@ -4,6 +4,7 @@ import * as _ from "lodash";
 export type NodeID = number;
 
 
+// TODO: this is an entity
 export class Tree<T>
 {
     root: TreeNode<T>;
@@ -84,6 +85,11 @@ export class Tree<T>
         return this.root.length;
     }
 
+    equals(other: Tree<T>): boolean
+    {
+        return this.root.equals(other.root);
+    }
+
     // TODO: optional? - undo the ignore
     _selectNodeById(target_id: NodeID): TreeNode<T>
     {
@@ -93,7 +99,6 @@ export class Tree<T>
 }
 
 
-// TODO: move this to Tree
 export function makeTree<T>(data: T, dependenciesOverride = {}): Tree<T>
 {
     const dependencies = {
@@ -109,11 +114,58 @@ export function makeTree<T>(data: T, dependenciesOverride = {}): Tree<T>
     return new Tree<T>(root, dependencies);
 }
 
+//: TODO: where those two functions should go to?
+export function serializeTree<T>(_tree: Tree<T>): string
+{
+    const tree = _tree.clone();
+
+    // TODO: NodeBody interface or is it overkill?
+    const nodes: Array<any> = [];
+    tree.root.forEach((node: any) =>
+    {
+        const node_parent = node.getParent(node, tree.root);
+
+        if (node_parent !== undefined)
+        {
+            nodes.push({
+                parent_id: node_parent.id,
+                id: node.id,
+                data: node.data,
+            });
+        }
+    });
+
+    return JSON.stringify({
+        root_data: tree.root.data,
+        nodes,
+    });
+}
+
+// TODO: optional
+export function deserializeTree<T>(data: string): Tree<T>
+{
+    const { root_data, nodes } = JSON.parse(data);
+
+    const tree = makeTree(root_data);
+    // TODO: NodeBody, as before? o.0
+    nodes.forEach((node: any) =>
+    {
+        const targetNode = tree._selectNodeById(node.parent_id);
+        targetNode._append(new TreeNode(node.id, node.data, []));
+    });
+
+    tree.root._reenumerate(tree.dependencies.idProvider.generate);
+
+    return tree;
+}
+
+
 
 // TODO: get rid of this export
 export class TreeNode<T>
 {
     id: NodeID;
+    // TODO: how about children being Sets?
     children: TreeNode<T>[];
     data: T;
 
@@ -174,6 +226,12 @@ export class TreeNode<T>
         return flat;
     }
 
+    forEach(f: (arg: TreeNode<T>) => void): void
+    {
+        f(this);
+        this.children.forEach(c => c.forEach(f));
+    }
+
     filter(f: (arg: TreeNode<T>) => boolean): TreeNode<T>
     {
         // TODO: actually implement
@@ -188,6 +246,21 @@ export class TreeNode<T>
             no += child.length;
         });
         return no;
+    }
+
+    equals(other: TreeNode<T>): boolean
+    {
+        // TODO: how to check for property? - traits? o.0
+        const [this_data, other_data]: any[] = [this.data, other.data];
+
+        const eq = this_data.equals
+            ? (a: any, b: any) => this_data.equals.bind(a)(b)
+            : _.isEqual
+        ;
+
+        return eq(this_data, other_data) &&
+            this.children.every((node, index) => node.equals(other.children[index]))
+        ;
     }
 
     getParent<T>(

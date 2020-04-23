@@ -1,4 +1,4 @@
-import { Tree, makeTree, TreeIdProvider } from "./tree"
+import { Tree, makeTree, TreeIdProvider, deserializeTree, serializeTree } from "./tree"
 
 interface testData{
     name: string,
@@ -154,4 +154,48 @@ test("tree IDs are rebuilt upon overflow", () =>
     const latestNode = tree.flatten().find(node => node.data === "latest");
 
     expect(latestNode.id).toBe(3);
+});
+
+test("deserialize-serialize is transparent", () =>
+{
+    const tree = treeRoot.clone();
+
+    const serializedDeserializedTree = deserializeTree(serializeTree(tree));
+
+    expect(typeof serializedDeserializedTree).toBe(typeof tree);
+    expect(deserializeTree(serializeTree(tree)).equals(tree)).toBe(true);
+});
+
+test("tree is equal to itself", () =>
+{
+    const a = makeTree("");
+    const b = a.clone();
+
+    expect(a.equals(b)).toBe(true);
+    // goes both directions
+    expect(b.equals(a)).toBe(true);
+});
+
+test("nested tree is equal to itself", () =>
+{
+    const a = makeTree("")
+        .addToRoot("foo");
+    const b = makeTree("")
+        .addToRoot("foo");
+
+    expect(a.equals(b)).toBe(true);
+    // goes both directions
+    expect(b.equals(a)).toBe(true);
+});
+
+test("nested tree is not equal to something else", () =>
+{
+    const a = makeTree("")
+        .addToRoot("foo");
+    const b = makeTree("")
+        .addToRoot("bar");
+
+    expect(a.equals(b)).toBe(false);
+    // goes both directions
+    expect(b.equals(a)).toBe(false);
 });

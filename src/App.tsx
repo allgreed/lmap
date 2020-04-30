@@ -1,9 +1,10 @@
 import { URL, Name, Resource } from "./core/resources";
-import { Tree, makeTree, TreeNode, NodeID } from "./core/tree";
+import { Tree, makeTree, TreeNode, NodeID, serializeTree, deserializeTree } from "./core/tree";
 import React, { Component } from "react";
 import { debounce } from "lodash";
 import "./App.css";
 import "react-tree-graph/dist/style.css";
+import saveAs from "file-saver";
 
 const ReactTreeGraph:any = require("react-tree-graph"); // missing external types, haxing it'!
 
@@ -61,7 +62,7 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
         ;
 
         this.state= {
-            value: "Name",
+            value: "Name", // TODO: can we get rid of this?
             chosenNode: ourTree.root.id,
             ourTree,
         };
@@ -74,6 +75,36 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
     {
         this.setState({value: event.target.value});
         event.preventDefault();
+    }
+
+    readFromFile(event: any)
+    {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+
+        reader.onload = (onload_event: any) =>
+        {
+            const raw_file_contents = onload_event.target.result;
+
+            const tree = deserializeTree<bleble>(raw_file_contents);
+
+            this.setState({
+                ourTree: tree,
+                chosenNode: tree.root.id
+            });
+        };
+
+        // TODO: Handle this
+        //reader.onerror = function (evt) {
+        //};
+
+        reader.readAsText(file);
+    }
+
+    outputToFile()
+    {
+        const dumpedTree = serializeTree(this.state.ourTree);
+        (saveAs as any)(new Blob([dumpedTree], {type: "text/plain;charset=utf-8"}), "tree.json");
     }
 
     addCustom(event: any, node_id: NodeID, value: string)
@@ -143,6 +174,11 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
                 <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
                 <button onClick = { e => this.addCustom(e, this.state.chosenNode, this.state.value) }>Dodaj</button>
                 <button onClick = { e => this.editNode(e, this.state.value) }>Edytuj</button>
+                <button onClick = { e => this.outputToFile() }>Pluj do pliku</button>
+                <form encType="multipart/form-data" noValidate>
+                    Siorbaj z pliku
+                    <input type="file" onChange = { e => this.readFromFile(e) }/>
+                </form>
 
             </div>
         );

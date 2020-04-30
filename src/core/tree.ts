@@ -63,6 +63,11 @@ export class Tree<T>
 
     removeNode(which: NodeID): Tree<T>
     {
+        if(this.isRootId(which))
+        {
+            throw new Error("Cannot delete root");
+        }
+        
         // TODO: unfuck this
         const toBeRemoved = this._selectNodeById(which);
         this.root.getParent(toBeRemoved, this.root).removeNode(toBeRemoved);
@@ -95,6 +100,11 @@ export class Tree<T>
     {
         // @ts-ignore
         return this.root.flatten().find(node => node.id === target_id);
+    }
+
+    isRootId(id: NodeID): boolean
+    {
+        return this.dependencies.idProvider.isRootId(id);
     }
 }
 

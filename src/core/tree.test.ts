@@ -199,3 +199,11 @@ test("nested tree is not equal to something else", () =>
     // goes both directions
     expect(b.equals(a)).toBe(false);
 });
+
+test("deleting root throws an error", () => 
+{
+    const tree = treeRoot.clone();
+    const rootId = tree.root.id;
+
+    expect(() => {tree.removeNode(rootId)}).toThrow("Cannot delete root");
+});

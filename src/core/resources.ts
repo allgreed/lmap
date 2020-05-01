@@ -1,17 +1,16 @@
-export interface URL {
+export interface Link {
     address: string;
     is_done: boolean;
 }
 
-export interface Name {
+export interface Text {
     content: string;
     is_done: boolean;
+    // TODO: this is an enum, not a boolean
 }
 
-export type Resource = URL | Name;
+// TODO: add a null resource - for the root
 
-
-export type Leaf = null;
-export type Tree = Leaf | [Resource, Tree[]];
+export type Resource = Link | Text;
 
 export default {};

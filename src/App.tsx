@@ -1,10 +1,10 @@
-import { URL, Name, Resource } from "./core/resources";
+import { Link, Text, Resource } from "./core/resources";
 import { Tree, makeTree, TreeNode, NodeID, serializeTree, deserializeTree } from "./core/tree";
 import React, { Component } from "react";
 import { debounce } from "lodash";
+import saveAs from "file-saver";
 import "./App.css";
 import "react-tree-graph/dist/style.css";
-import saveAs from "file-saver";
 
 const ReactTreeGraph:any = require("react-tree-graph"); // missing external types, haxing it'!
 
@@ -15,16 +15,26 @@ interface ReactTreeGraphNode {
     children: Array<ReactTreeGraphNode>,
 }
 
-interface bleble {
-    name: string,
-}
 
-function displayTree(t: Tree<bleble>): ReactTreeGraphNode
+function displayTree(t: Tree<Resource>): ReactTreeGraphNode
 {
-    function _displayTree(t: TreeNode<bleble>): ReactTreeGraphNode
+    function _displayTree(t: TreeNode<Resource>): ReactTreeGraphNode
     {
+        const resource_to_display = t.data;
+
+        let fuj;
+        // TODO: make this properly extendiable - maybe delegate?
+        if ("address" in resource_to_display)
+        {
+            fuj = resource_to_display.address;
+        }
+        else
+        {
+            fuj = (resource_to_display as Text).content;
+        }
+
         const result: ReactTreeGraphNode = {
-            name: t.data.name,
+            name: fuj,
             id: t.id,
             children: [],
         }
@@ -40,26 +50,13 @@ function displayTree(t: Tree<bleble>): ReactTreeGraphNode
     return _displayTree(t.root);
 }
 
-export default class App extends Component<{}, { chosenNode: NodeID, value: string, ourTree: Tree<bleble>}>
+export default class App extends Component<{}, { chosenNode: NodeID, value: string, ourTree: Tree<Resource>}>
 {
     constructor(props: any)
     {
         super(props);
 
-        const ourTree = makeTree({name: "korzen"})
-            .addToRoot({name: "notka1"})
-            .addToRoot({name: "notka2"})
-            .addTreeToRoot(makeTree({name: "notka3"})
-                .addToRoot({name: "notka1od3"})
-                .addToRoot({name: "notka2od3"}))
-            .addTreeToRoot(makeTree({name: "notka4"})
-                .addToRoot({name: "notka1od4"})
-                .addToRoot({name: "notka2od4"})
-                .addTreeToRoot(makeTree({name: "notka3od4"})
-                    .addToRoot({name: "notka1od34"})
-                    .addToRoot({name: "notka2od34"}))
-                .addToRoot({name: "notka5"}))
-        ;
+        const ourTree = makeTree({address: "korzen", is_done: false}) ;
 
         this.state= {
             value: "Name", // TODO: can we get rid of this?
@@ -86,7 +83,7 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
         {
             const raw_file_contents = onload_event.target.result;
 
-            const tree = deserializeTree<bleble>(raw_file_contents);
+            const tree = deserializeTree<Resource>(raw_file_contents);
 
             this.setState({
                 ourTree: tree,
@@ -107,9 +104,12 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
         (saveAs as any)(new Blob([dumpedTree], {type: "text/plain;charset=utf-8"}), "tree.json");
     }
 
-    addCustom(event: any, node_id: NodeID, value: string)
+    addCustom(event: any, node_id: NodeID, address: string)
     {
-        this.setState({ourTree: this.state.ourTree.add(node_id, {name: value})});
+        // TODO: dehardcode the Link type
+        this.setState({
+            ourTree: this.state.ourTree.add(node_id, {address, is_done: false}),
+        });
     }
 
     remove(event: any)
@@ -133,7 +133,8 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
     editNode(event: any, value: string)
     {
         // TODO: get rid of private access
-        this.state.ourTree._selectNodeById(this.state.chosenNode).data.name = value;
+        // TODO: dehardcode the Link type
+        (this.state.ourTree._selectNodeById(this.state.chosenNode).data as Link).address = value;
 
         this.setState({
             ourTree: this.state.ourTree,
@@ -167,19 +168,24 @@ export default class App extends Component<{}, { chosenNode: NodeID, value: stri
                     keyProp="id"
                 />
 
-                {// TODO: get rid of private access
+                {
+                    // TODO: extract NodeEditor component
+                    // TODO: add a proper editor that respects resource type
                 }
-                <label>Selected node: {this.state.ourTree._selectNodeById(this.state.chosenNode).data.name} : {this.state.chosenNode}</label>
+                <label>Selected node: {this.state.chosenNode}</label>
                 <button onClick = { e => this.remove(e) } disabled={this.state.ourTree.isRootId(this.state.chosenNode)}>Usuń</button>
                 <input type="text" name="node" value={this.state.value} onChange={this.handleChange}/>
+                {
+                    // TODO: add a possiblity to select type to add (then it's just editor)
+                    // right now it's fixed to link
+                }
                 <button onClick = { e => this.addCustom(e, this.state.chosenNode, this.state.value) }>Dodaj</button>
                 <button onClick = { e => this.editNode(e, this.state.value) }>Edytuj</button>
                 <button onClick = { e => this.outputToFile() }>Pluj do pliku</button>
                 <form encType="multipart/form-data" noValidate>
-                    Siorbaj z pliku
+                    <label className="file-uploader-label">Siorbaj z pliku:</label>
                     <input type="file" onChange = { e => this.readFromFile(e) }/>
                 </form>
-
             </div>
         );
     }

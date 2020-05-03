@@ -1,4 +1,4 @@
-import { Tree, makeTree, TreeIdProvider, deserializeTree, serializeTree, TreeNode } from "./tree"
+import { Tree, makeTree, TreeIdProvider, deserializeTree, serializeTree } from "./tree"
 
 interface testData{
     name: string,

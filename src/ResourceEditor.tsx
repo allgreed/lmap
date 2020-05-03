@@ -56,7 +56,7 @@ export default class ResourceEditor extends Component<{
                 />
                 <div className="block-hax"></div>
                 <button 
-                    disabled={this.props.isDeletable}
+                    disabled={!this.props.isDeletable}
                     onClick={ _ => this.props.onDelete()}
                 >
                     Usuń

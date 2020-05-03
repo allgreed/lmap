@@ -124,7 +124,7 @@ export default class App extends Component<{
                 <ResourceEditor 
                     key={this.state.chosenNode}
                     resource={this.state.ourTree.nodeData(this.state.chosenNode)}
-                    isDeletable={this.state.ourTree.isRoot(this.state.chosenNode)}
+                    isDeletable={!this.state.ourTree.isRoot(this.state.chosenNode)}
                     onDelete={this.removeSelectedNode}
                     onAdd={this.attachNewNodeToSelected}
                     onEditonCommit={this.replaceSelectedNodeContents}

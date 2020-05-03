@@ -9,7 +9,7 @@ ifneq (,$(findstring w,$(MAKEFLAGS)))
 	CI:=''
 else
 	# non-interactive
-	WATCHFLAG:=''
+	WATCHFLAG:=
 	CI:=true
 endif
 

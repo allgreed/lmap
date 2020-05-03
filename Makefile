@@ -38,6 +38,12 @@ deploy: ## deploy a container to Nomad
 show-coverage:
 	xdg-open coverage/lcov-report/index.html
 
+typecheck: ## run typecheck, -w flag for watchmode
+ifeq (,$(findstring w,$(MAKEFLAGS)))
+	npx tsc -p ./tsconfig.json
+else
+	npx tsc -p ./tsconfig.json -w
+endif
 
 # Plumbing
 # ###############

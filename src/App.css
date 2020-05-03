@@ -60,3 +60,9 @@ label {
 {
     display: unset;
 }
+
+.block-hax {
+    margin: 3px;
+    padding: 10px;
+    display: block;
+}

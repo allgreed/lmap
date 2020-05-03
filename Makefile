@@ -19,11 +19,12 @@ lint-fix: setup ## automatically fix linter errors (if possible)
 lint: setup ## run static analysis
 	npx eslint $(LINTED_FILES)
 
-test: setup ## run all tests
+test: setup ## run all tests, -w flag for watchmode tests for TDD iteration
+ifeq (,$(findstring w,$(MAKEFLAGS)))
 	CI=false $(REACT_APP_CMD) test --coverage # ad hoc fix for warnings
-
-iterate: ## run tests for TDD iteration
+else
 	$(REACT_APP_CMD) test
+endif
 
 container: build ## create container
 	docker build -t lmap .

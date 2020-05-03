@@ -38,6 +38,7 @@ export class Tree<T>
         }
         finally
         {
+            console.assert(!isNaN(newId), "generated ID is not NaN")
             targetNode._append(new TreeNode(newId, data, []));
         }
 
@@ -63,7 +64,7 @@ export class Tree<T>
 
     removeNode(which: NodeID): Tree<T>
     {
-        if(this.isRootId(which))
+        if(this.isRoot(which))
         {
             throw new Error("Cannot delete root");
         }
@@ -95,6 +96,11 @@ export class Tree<T>
         return this.root.equals(other.root);
     }
 
+    nodeData(id: NodeID): T
+    {
+        return this._selectNodeById(id).data;
+    }
+
     // TODO: optional? - undo the ignore
     _selectNodeById(target_id: NodeID): TreeNode<T>
     {
@@ -102,7 +108,7 @@ export class Tree<T>
         return this.root.flatten().find(node => node.id === target_id);
     }
 
-    isRootId(id: NodeID): boolean
+    isRoot(id: NodeID): boolean
     {
         return this.dependencies.idProvider.isRootId(id);
     }

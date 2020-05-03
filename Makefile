@@ -3,10 +3,14 @@
 REACT_APP_CMD := EXTEND_ESLINT=true npx react-scripts
 LINTED_FILES := ./src/**/*.ts{,x} ./src/*.ts{,x}
 
-ifeq (,$(findstring w,$(MAKEFLAGS)))
-	CI=false
+ifneq (,$(findstring w,$(MAKEFLAGS)))
+	# interactive
+	WATCHFLAG:=-w
+	CI:=''
 else
-	WATCHFLAG=-w
+	# non-interactive
+	WATCHFLAG:=''
+	CI:=true
 endif
 
 # Porcelain

@@ -44,14 +44,14 @@ test("add tree", () =>
     const mockIdProvider = {
         generate: sequentialIdProviderFn,
     };
-    const _makeTree = _ => makeTree(_, { idProvider: mockIdProvider });
+    const _makeTree = (data: string, dependenciesOverride = {}) => makeTree(data, { idProvider: mockIdProvider });
 
     const otherTree = _makeTree("other", { idProvider: mockIdProvider })
         .addToRoot("adjin")
         .addToRoot("dwa");
     expect(sequentialIdProviderFn.mock.calls.length).toBe(3);
 
-    const tree = _makeTree("").addTreeToRoot(otherTree, mockIdProvider);
+    const tree = _makeTree("").addTreeToRoot(otherTree);
 
     expect(sequentialIdProviderFn.mock.calls.length).toBe(7);
     expect(tree.flatten().sort().map(node => node.id)).toStrictEqual([0, 22, 33, 44]);
@@ -153,7 +153,7 @@ test("tree IDs are rebuilt upon overflow", () =>
 
     const latestNode = tree.flatten().find(node => node.data === "latest");
 
-    expect(latestNode.id).toBe(3);
+    expect(latestNode!.id).toBe(3);
 });
 
 test("deserialize-serialize is transparent", () =>

@@ -3,6 +3,16 @@
 REACT_APP_CMD := EXTEND_ESLINT=true npx react-scripts
 LINTED_FILES := ./src/**/*.ts{,x} ./src/*.ts{,x}
 
+ifneq (,$(findstring w,$(MAKEFLAGS)))
+	# interactive
+	WATCHFLAG:=-w
+	CI:=''
+else
+	# non-interactive
+	WATCHFLAG:=
+	CI:=true
+endif
+
 # Porcelain
 # ###############
 .PHONY: run build lint test container deploy
@@ -19,11 +29,8 @@ lint-fix: setup ## automatically fix linter errors (if possible)
 lint: setup ## run static analysis
 	npx eslint $(LINTED_FILES)
 
-test: setup ## run all tests
-	CI=false $(REACT_APP_CMD) test --coverage # ad hoc fix for warnings
-
-iterate: ## run tests for TDD iteration
-	$(REACT_APP_CMD) test
+test: setup ## run all tests, use -w for watchmode
+	CI=$(CI) $(REACT_APP_CMD) test --coverage
 
 container: build ## create container
 	docker build -t lmap .
@@ -38,6 +45,8 @@ deploy: ## deploy a container to Nomad
 show-coverage:
 	xdg-open coverage/lcov-report/index.html
 
+typecheck: ## run typecheck, use -w for watchmode
+	npx tsc -p ./tsconfig.json $(WATCHFLAG)
 
 # Plumbing
 # ###############

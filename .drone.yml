@@ -14,6 +14,11 @@ steps:
   - nix-shell --quiet --run 'make setup'
   - echo -n "latest,preview$DRONE_COMMIT_SHA" > .tags
 
+- name: typecheck
+  image: nixos/nix:2.3
+  commands:
+  - nix-shell --quiet --run 'make typecheck'
+
 - name: lint
   image: nixos/nix:2.3
   commands:

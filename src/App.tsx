@@ -42,13 +42,13 @@ export default class App extends Component<{
 
     removeSelectedNode = () => 
     {
+        // TODO: any way of writing this DRY without breaking atomicity (both updates must happen in 1 cycle)?
         // TODO: select parent of the deleted node
+        // TODO: don't leak implementation details - use a method to get root iD!!!
         this.setState({
             ourTree: this.state.ourTree.removeNode(this.state.chosenNode),
+            chosenNode: Number.MIN_SAFE_INTEGER
         });
-
-        // TODO: don't leak implementation details - use a method to get root iD!!!
-        this.selectNode(Number.MIN_SAFE_INTEGER);
     }
 
     selectNode = (node_id: NodeID) =>

@@ -2,6 +2,7 @@ import { Text, Resource } from "./core/resources";
 import { Tree, makeTree, TreeNode, NodeID, serializeTree, deserializeTree } from "./core/tree";
 
 import ResourceEditor from "./ResourceEditor";
+import ResourceAdder from "./ResourceAdder";
 
 import React, { Component } from "react";
 import { debounce } from "lodash";
@@ -25,7 +26,7 @@ export default class App extends Component<{
     {
         super(props);
 
-        const ourTree = makeTree({address: "korzen", is_done: false}) ;
+        const ourTree = makeTree({content: "korzen", is_done: false});
 
         this.state= {
             chosenNode: ourTree.root.id,
@@ -121,13 +122,19 @@ export default class App extends Component<{
                     keyProp="id"
                 />
 
+                {
+                    // TODO: Extract ResourceRemover
+                }
                 <ResourceEditor 
                     key={this.state.chosenNode}
                     resource={this.state.ourTree.nodeData(this.state.chosenNode)}
                     isDeletable={!this.state.ourTree.isRoot(this.state.chosenNode)}
                     onDelete={this.removeSelectedNode}
-                    onAdd={this.attachNewNodeToSelected}
                     onEditonCommit={this.replaceSelectedNodeContents}
+                />
+
+                <ResourceAdder
+                    onAdd={this.attachNewNodeToSelected}
                 />
 
                 {

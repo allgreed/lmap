@@ -66,6 +66,10 @@ export class Tree<T>
     {
         if(this.isRoot(which))
         {
+            // there is no real reson for not doing no-op upon root deletion 
+            // when it would solve a problem it'd be a good idea to do so
+            // for now we keep it as an additional check to see if we're not
+            // deleting root by accident
             throw new Error("Cannot delete root");
         }
         

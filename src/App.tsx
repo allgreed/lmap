@@ -115,7 +115,7 @@ export default class App extends Component<{
                     // TODO: extract this to seperate component
                 }
                 <ReactTreeGraph
-                    data={displayTree(this.state.ourTree)}
+                    data={displayTree(this.state.ourTree, this.state.chosenNode)}
                     gProps={{
                         onClick: (_: any, node_id: NodeID) => { this.selectNode(node_id) }
                     }}
@@ -172,10 +172,11 @@ interface ReactTreeGraphNode {
     name: string,
     id: NodeID,
     children: Array<ReactTreeGraphNode>,
+    textProps: {},
 }
 
 
-function displayTree(t: Tree<Resource>): ReactTreeGraphNode
+function displayTree(t: Tree<Resource>, chosenNode: NodeID): ReactTreeGraphNode
 {
     function _displayTree(t: TreeNode<Resource>): ReactTreeGraphNode
     {
@@ -192,10 +193,12 @@ function displayTree(t: Tree<Resource>): ReactTreeGraphNode
             fuj = (resource_to_display as Text).content;
         }
 
+        const textProps = t.id === chosenNode ? {className: "selected"} : {}
         const result: ReactTreeGraphNode = {
             name: fuj,
             id: t.id,
             children: [],
+            textProps: textProps,
         }
 
         if (t.children.length !== 0)

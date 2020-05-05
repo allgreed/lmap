@@ -42,6 +42,13 @@ svg .node {
 	cursor: pointer;
 }
 
+svg g text.selected {
+  fill: greenyellow;
+  font-weight: bold;
+  font-size: larger;
+  transition: color .5s, font-size .5s;
+}
+
 svg path.link {
 	fill: none;
 	stroke: #2593B8;

@@ -1,4 +1,6 @@
+
 import { Resource } from "./core/resources";
+
 
 import React, { FunctionComponent } from "react";
 import { Formik, Form, Field } from "formik";
@@ -24,7 +26,6 @@ const ResourceEditor: React.FunctionComponent<{
                 ...values,
                 is_done: false,
             };
-
             props.onEditonCommit(resource as any);
         }}
     >

@@ -15,7 +15,7 @@ endif
 
 # Porcelain
 # ###############
-.PHONY: run build lint test container deploy
+.PHONY: run build lint lint-fix test container deploy typecheck show-coverage
 
 run: setup ## run development server
 	$(REACT_APP_CMD) start

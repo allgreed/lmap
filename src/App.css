@@ -36,17 +36,22 @@ svg .node text {
 	background-color: #444;
 	fill: #F4F4F4;
 	text-shadow: 0 1px 4px black;
+  user-select: none;
 }
 
 svg .node {
 	cursor: pointer;
 }
 
+svg g .selected {
+  fill: #2593B8;
+  transform: scale(1.5);
+  transition: all .3s ease-in-out;
+}
+
 svg g text.selected {
-  fill: greenyellow;
+  fill: #F4F4F4;
   font-weight: bold;
-  font-size: larger;
-  transition: color .5s, font-size .5s;
 }
 
 svg path.link {

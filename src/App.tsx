@@ -173,6 +173,7 @@ interface ReactTreeGraphNode {
     id: NodeID,
     children: Array<ReactTreeGraphNode>,
     textProps: {},
+    circleProps: {},
 }
 
 
@@ -193,12 +194,13 @@ function displayTree(t: Tree<Resource>, chosenNode: NodeID): ReactTreeGraphNode
             fuj = (resource_to_display as Text).content;
         }
 
-        const textProps = t.id === chosenNode ? {className: "selected"} : {}
+        const selected = t.id === chosenNode ? {className: "selected"} : {}
         const result: ReactTreeGraphNode = {
             name: fuj,
             id: t.id,
             children: [],
-            textProps: textProps,
+            textProps: selected,
+            circleProps: selected,
         }
 
         if (t.children.length !== 0)

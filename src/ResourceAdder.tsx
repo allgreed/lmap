@@ -1,4 +1,5 @@
-import { Resource } from "./core/resources";
+// TODO: how to limit importing scope?
+import { Resource, ResourceTypeString, ResourceTypeStringValues, Link, Text } from "./core/resources";
 
 import React, { FunctionComponent } from "react";
 import { Formik, Form, Field } from "formik";
@@ -7,15 +8,12 @@ import { Formik, Form, Field } from "formik";
 import "./ResourceAdder.css";
 
 
-// TODO: is is possible to reflect this from Resource union given proper typenames on interfaces?
-type TypeString = "Link" | "Text";
-
 const ResourceAdder: React.FunctionComponent<{
     onAdd: (resource: Resource) => void,
 }> = (props) =>
     <Formik
         initialValues={{
-            typestring: "Link"
+            typestring: ResourceTypeStringValues[0]
         }}
         onSubmit={(values, _) => 
         {
@@ -30,10 +28,11 @@ const ResourceAdder: React.FunctionComponent<{
         }
         <Form translate="yes"> 
             <Field name="typestring" component="select">
-                <option value="Link">Link</option>
-                <option value="Text">Text</option>
+                {
+                    ResourceTypeStringValues
+                        .map(t => <option value={t}>{t}</option>)
+                }
             </Field>
-
             <button type="submit"> Dodaj </button>
         </Form>
     </Formik>
@@ -41,11 +40,11 @@ const ResourceAdder: React.FunctionComponent<{
 export default ResourceAdder;
 
 
-// TODO: make this a field on a resource
-function default_for_typestring(t: TypeString): Resource
+// TODO: get rid of the casting
+function default_for_typestring(t: ResourceTypeString): Resource
 {
     return {
-        "Link": { address: "", is_done: false },
-        "Text": { content: "", is_done: false },
+        "Link": { __typename: "Link", address: "", is_done: false } as Link,
+        "Text": { __typename: "Text", content: "", is_done: false } as Text,
     }[t];
 }

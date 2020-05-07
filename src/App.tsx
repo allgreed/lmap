@@ -1,4 +1,5 @@
-import { Text, Resource } from "./core/resources";
+// TODO: how to limit importing scope?
+import { Resource, Link, Text } from "./core/resources";
 import { Tree, makeTree, TreeNode, NodeID, serializeTree, deserializeTree } from "./core/tree";
 
 import ResourceEditor from "./ResourceEditor";
@@ -26,7 +27,8 @@ export default class App extends Component<{
     {
         super(props);
 
-        const ourTree = makeTree({content: "korzen", is_done: false});
+        // TODO: get rid of the casting
+        const ourTree = makeTree({__typename: "Text", content: "korzen", is_done: false} as Text);
 
         this.state= {
             chosenNode: ourTree.root.id,
@@ -181,28 +183,17 @@ function displayTree(t: Tree<Resource>, chosenNode: NodeID): ReactTreeGraphNode
 {
     function _displayTree(t: TreeNode<Resource>): ReactTreeGraphNode
     {
-        const resource_to_display = t.data;
-
-        let fuj;
-        // TODO: make this properly extendiable - maybe delegate?
-        if ("address" in resource_to_display)
-        {
-            fuj = resource_to_display.address;
-        }
-        else
-        {
-            fuj = (resource_to_display as Text).content;
-        }
-
         const selected = t.id === chosenNode ? {className: "selected"} : {}
+
         const result: ReactTreeGraphNode = {
-            name: fuj,
+            name: displayResource(t.data),
             id: t.id,
             children: [],
             textProps: selected,
             circleProps: selected,
         }
 
+        // terminate recursion
         if (t.children.length !== 0)
         {
             result.children = t.children.map(_displayTree)
@@ -212,4 +203,14 @@ function displayTree(t: Tree<Resource>, chosenNode: NodeID): ReactTreeGraphNode
     }
 
     return _displayTree(t.root);
+}
+
+
+// TODO: get rid of the casting
+function displayResource(r: Resource): string
+{
+    return {
+        "Link": (r as unknown as Link).address,
+        "Text": (r as Text).content,
+    }[r.__typename];
 }

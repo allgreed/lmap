@@ -38,6 +38,9 @@ container: build ## create container
 init: ## one time setup
 	direnv allow
 
+todo: ## list all TODOs in the project
+	git grep -I --line-number TODO | grep -v 'list all TODOs in the project' | grep TODO
+
 deploy: ## deploy a container to Nomad
 	VERSION=$(VERSION) ./deploy.nomad.tpl > deploy.nomad
 	nomad job run -address=$(NOMAD_URL) deploy.nomad
@@ -47,6 +50,7 @@ show-coverage:
 
 typecheck: ## run typecheck, use -w for watchmode
 	npx tsc -p ./tsconfig.json $(WATCHFLAG)
+
 
 # Plumbing
 # ###############

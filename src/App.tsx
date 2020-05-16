@@ -27,8 +27,8 @@ export default class App extends Component<{
     {
         super(props);
 
-        // TODO: get rid of the casting
-        const ourTree = makeTree({__typename: "Text", content: "korzen", is_done: false} as Text);
+        const initial_resource: Resource = {__typename: "Text", content: "korzen", is_done: false};
+        const ourTree = makeTree(initial_resource);
 
         this.state= {
             chosenNode: ourTree.root.id,
@@ -206,11 +206,10 @@ function displayTree(t: Tree<Resource>, chosenNode: NodeID): ReactTreeGraphNode
 }
 
 
-// TODO: get rid of the casting
 function displayResource(r: Resource): string
 {
     return {
-        "Link": (r as unknown as Link).address,
+        "Link": (r as Link).address,
         "Text": (r as Text).content,
     }[r.__typename];
 }

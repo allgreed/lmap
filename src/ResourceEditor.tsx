@@ -27,7 +27,7 @@ const ResourceEditor: React.FunctionComponent<{
                 __typename: props.resource.__typename,
             };
 
-            props.onEditonCommit(resource as any);
+            props.onEditonCommit(resource as Resource);
         }}
     >
         {

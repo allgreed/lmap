@@ -1,5 +1,4 @@
-// TODO: how to limit importing scope?
-import { Resource, ResourceTypeString, ResourceTypeStringValues, Link, Text } from "./core/resources";
+import { Resource, ResourceTypeString, ResourceTypeStringValues } from "./core/resources";
 
 import React, { FunctionComponent } from "react";
 import { Formik, Form, Field } from "formik";
@@ -40,11 +39,10 @@ const ResourceAdder: React.FunctionComponent<{
 export default ResourceAdder;
 
 
-// TODO: get rid of the casting
 function default_for_typestring(t: ResourceTypeString): Resource
 {
     return {
-        "Link": { __typename: "Link", address: "", is_done: false } as Link,
-        "Text": { __typename: "Text", content: "", is_done: false } as Text,
+        "Link": { __typename: "Link", address: "", is_done: false } as Resource,
+        "Text": { __typename: "Text", content: "", is_done: false } as Resource,
     }[t];
 }

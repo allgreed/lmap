@@ -174,6 +174,8 @@ export function deserializeTree<T>(data: string): Tree<T>
         targetNode._append(new TreeNode(node.id, node.data, []));
     });
 
+    tree.root.children.forEach((child) => child._reenumerate(tree.dependencies.idProvider.generate));
+
     return tree;
 }
 

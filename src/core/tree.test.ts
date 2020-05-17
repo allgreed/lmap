@@ -207,3 +207,12 @@ test("deleting root throws an error", () =>
 
     expect(() => {tree.removeNode(rootId)}).toThrow("Cannot delete root");
 });
+
+test("deserializing tree always assigns ROOT_ID to root node", () => 
+{
+    const tree = treeRoot.clone();
+    const deserializedTree = deserializeTree(serializeTree(tree));
+
+    expect(deserializedTree.root.id).toBe(deserializedTree.dependencies.idProvider.ROOT_ID);
+});
+

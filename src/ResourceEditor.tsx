@@ -50,6 +50,8 @@ function resource_to_fields(r: Resource): Array<JSX.Element>
 {
     return {
         "Link": [<fieldset>
+            <label className="file-uploader-label">title</label>
+            <Field name="title" />
             <label className="file-uploader-label">address</label>
             <Field name="address" />
         </fieldset>],

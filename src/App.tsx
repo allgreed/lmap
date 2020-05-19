@@ -212,7 +212,7 @@ function displayTree(t: Tree<Resource>, chosenNode: NodeID): ReactTreeGraphNode
 function displayResource(r: Resource): string
 {
     return {
-        "Link": (r as Link).address,
+        "Link": (r as Link).title,
         "Text": (r as Text).content,
     }[r.__typename];
 }

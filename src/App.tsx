@@ -183,14 +183,17 @@ function displayTree(t: Tree<Resource>, chosenNode: NodeID): ReactTreeGraphNode
 {
     function _displayTree(t: TreeNode<Resource>): ReactTreeGraphNode
     {
-        const selected = t.id === chosenNode ? {className: "selected"} : {}
-
+        const cssClasses = [
+            t.data.is_done && "done",
+            t.id === chosenNode && "selected"
+        ].join(" ")
+            
         const result: ReactTreeGraphNode = {
             name: displayResource(t.data),
             id: t.id,
             children: [],
-            textProps: selected,
-            circleProps: selected,
+            textProps: {className: cssClasses},
+            circleProps: {className: cssClasses},
         }
 
         // terminate recursion

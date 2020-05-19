@@ -1,5 +1,6 @@
 export interface Link {
     __typename: "Link";
+    title: string;
     address: string;
     is_done: boolean;
 }

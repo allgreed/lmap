@@ -28,7 +28,8 @@ div.App {
 svg .node circle {
 	fill: #F3F3FF;
 	stroke: #2593B8;
-	stroke-width: 1.5px;
+  stroke-width: 1.5px;
+  transition: all .3s ease-in-out;
 }
 
 svg .node text {
@@ -37,6 +38,7 @@ svg .node text {
 	fill: #F4F4F4;
 	text-shadow: 0 1px 4px black;
   user-select: none;
+  transition: all .3s ease-in-out;
 }
 
 svg .node {
@@ -46,7 +48,6 @@ svg .node {
 svg g .selected {
   fill: #2593B8;
   transform: scale(1.5);
-  transition: all .3s ease-in-out;
 }
 
 svg g text.selected {

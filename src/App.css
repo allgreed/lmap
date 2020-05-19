@@ -53,6 +53,9 @@ svg g text.selected {
   fill: #F4F4F4;
   font-weight: bold;
 }
+svg g circle.done {
+  fill: #0fa701;
+}
 
 svg path.link {
 	fill: none;

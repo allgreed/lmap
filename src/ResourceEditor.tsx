@@ -22,8 +22,6 @@ const ResourceEditor: React.FunctionComponent<{
         {
             const resource = {
                 ...values,
-                // TODO: remove this after #35
-                is_done: props.resource.is_done,
                 __typename: props.resource.__typename,
             };
 
@@ -35,10 +33,11 @@ const ResourceEditor: React.FunctionComponent<{
         }
         <Form translate="yes"> 
             { resource_to_fields(props.resource) }
-
+            <label>Is done?</label>
+            <Field type="checkbox" name="is_done" />
             <div className="block-hax"></div>
             <button type="button" disabled={!props.isDeletable} onClick={ _ => props.onDelete()} > Usuń </button>
-            <button type="submit"> Edytuj </button>
+            <button type="submit"> Zapisz </button>
         </Form>
     </Formik>
 

@@ -146,30 +146,32 @@ export default class App extends Component<{
                     keyProp="id"
                 />
 
-                {
+                <div className="controls">
+                    {
                     // TODO: Extract ResourceRemover
-                }
-                <ResourceEditor 
-                    key={this.state.chosenNode}
-                    resource={this.state.ourTree.nodeData(this.state.chosenNode)}
-                    isDeletable={!this.state.ourTree.isRoot(this.state.chosenNode)}
-                    onDelete={this.removeSelectedNode}
-                    onEditonCommit={this.replaceSelectedNodeContents}
-                />
+                    }
+                    <ResourceEditor 
+                        key={this.state.chosenNode}
+                        resource={this.state.ourTree.nodeData(this.state.chosenNode)}
+                        isDeletable={!this.state.ourTree.isRoot(this.state.chosenNode)}
+                        onDelete={this.removeSelectedNode}
+                        onEditonCommit={this.replaceSelectedNodeContents}
+                    />
 
-                <ResourceAdder
-                    onAdd={this.attachNewNodeToSelected}
-                />
+                    <ResourceAdder
+                        onAdd={this.attachNewNodeToSelected}
+                    />
 
-                {
+                    {
                     // TODO: extract this to seperate component
-                }
-                <div className="block-hax">
-                    <form encType="multipart/form-data" noValidate>
-                        <label className="file-uploader-label">Siorbaj z pliku:</label>
-                        <input type="file" onChange = { e => this.readFromFile(e) }/>
-                    </form>
-                    <button onClick = { e => this.outputToFile() }>Pluj do pliku</button>
+                    }
+                    <div className="block-hax">
+                        <form encType="multipart/form-data" noValidate>
+                            <label className="file-uploader-label">Siorbaj z pliku:</label>
+                            <input type="file" onChange = { e => this.readFromFile(e) }/>
+                        </form>
+                        <button onClick = { e => this.outputToFile() }>Pluj do pliku</button>
+                    </div>
                 </div>
             </div>
         );

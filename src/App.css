@@ -25,6 +25,11 @@ div.App {
   background-color: #242424
 }
 
+svg {
+  display: block;
+  margin: auto;
+}
+
 svg .node circle {
 	fill: #F3F3FF;
 	stroke: #2593B8;
@@ -70,6 +75,7 @@ label {
     display: block;
     padding: 10px;
     margin: 3px;
+    user-select: none;
 }
 
 .file-uploader-label
@@ -77,8 +83,7 @@ label {
     display: unset;
 }
 
-.block-hax {
-    margin: 3px;
-    padding: 10px;
-    display: block;
+.controls {
+  min-height: 25vh;
+  background-color: #444;
 }

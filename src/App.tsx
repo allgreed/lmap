@@ -36,6 +36,26 @@ export default class App extends Component<{
         };
     }
 
+    readFromLocalState = () =>
+    {
+        if (localStorage.hasOwnProperty("tree"))
+        {
+            const serializedTree = localStorage.getItem("tree")!
+            const tree = deserializeTree<Resource>(serializedTree);
+
+            this.setState({
+                ourTree: tree,
+                chosenNode: tree.root.id
+            });
+        }
+    }
+
+    outputToLocalState = () =>
+    {
+        const serializedTree = serializeTree(this.state.ourTree)
+        localStorage.setItem("tree", serializedTree);
+    }
+
     attachNewNodeToSelected = (r: Resource) =>
     {
         this.setState({
@@ -160,6 +180,7 @@ export default class App extends Component<{
     componentDidMount()
     {
         window.addEventListener("resize", this.debouncedHandleResize);
+        this.readFromLocalState()
     }
 
     componentWillUnmount()
@@ -167,6 +188,10 @@ export default class App extends Component<{
         window.removeEventListener("resize", this.debouncedHandleResize);
     }
 
+    componentDidUpdate(): void
+    {
+        this.outputToLocalState()
+    }
 }
 
 

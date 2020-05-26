@@ -33,8 +33,6 @@ const ResourceEditor: React.FunctionComponent<{
         }
         <Form translate="yes"> 
             { resource_to_fields(props.resource) }
-            <label>Is done?</label>
-            <Field type="checkbox" name="is_done" />
             <div className="block-hax"></div>
             <button type="button" disabled={!props.isDeletable} onClick={ _ => props.onDelete()} > Usuń </button>
             <button type="submit"> Zapisz </button>
@@ -52,12 +50,20 @@ function resource_to_fields(r: Resource): Array<JSX.Element>
         "Link": [<fieldset>
             <label className="file-uploader-label">title</label>
             <Field name="title" />
+
             <label className="file-uploader-label">address</label>
             <Field name="address" />
+
+            <label>Is done?</label>
+            <Field type="checkbox" name="is_done" />
         </fieldset>],
         "Text": [<fieldset>
             <label className="file-uploader-label">content</label>
             <Field name="content" />
+
+            <label>Is done?</label>
+            <Field type="checkbox" name="is_done" />
         </fieldset>],
+        "Null": [],
     }[r.__typename];
 }

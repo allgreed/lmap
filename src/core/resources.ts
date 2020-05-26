@@ -11,18 +11,23 @@ export interface Text {
     is_done: boolean;
     // TODO: is_done => status ; boolean => enum
 }
+
+export interface Null {
+    __typename: "Null";
+}
 // when adding a new Resource please remember to add it to Resource union
 // and ResourceTypeStringValues array
 
 // TODO: add a null resource - for the root
 
 
-export type Resource = Link | Text;
+export type Resource = Link | Text | Null;
 export type ResourceTypeString = Resource["__typename"];
 
 export const ResourceTypeStringValues: Array<ResourceTypeString> = [
     "Link",
     "Text",
+    "Null",
 ];
 
 

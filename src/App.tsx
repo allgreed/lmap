@@ -27,7 +27,7 @@ export default class App extends Component<{
     {
         super(props);
 
-        const initial_resource: Resource = {__typename: "Text", content: "korzen", is_done: false};
+        const initial_resource: Resource = {__typename: "Null"};
         const ourTree = makeTree(initial_resource);
 
         this.state= {
@@ -211,7 +211,19 @@ function displayTree(t: Tree<Resource>, chosenNode: NodeID): ReactTreeGraphNode
     function _displayTree(t: TreeNode<Resource>): ReactTreeGraphNode
     {
         const cssClasses = [
-            t.data.is_done && "done",
+            (() =>
+            {
+                if (t.data.__typename === "Null") return "";
+
+                if (t.data.is_done)
+                {
+                    return "done";
+                }
+                else
+                {
+                    return "";
+                }
+            })(),
             t.id === chosenNode && "selected"
         ].join(" ")
             
@@ -241,5 +253,6 @@ function displayResource(r: Resource): string
     return {
         "Link": (r as Link).title,
         "Text": (r as Text).content,
+        "Null": "",
     }[r.__typename];
 }

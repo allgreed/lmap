@@ -44,5 +44,6 @@ function default_for_typestring(t: ResourceTypeString): Resource
     return {
         "Link": { __typename: "Link", address: "", is_done: false } as Resource,
         "Text": { __typename: "Text", content: "", is_done: false } as Resource,
+        "Null": { __typename: "Null"} as Resource,
     }[t];
 }

@@ -1,9 +1,8 @@
 // TODO: how to limit importing scope?
 import { Resource, Link, Text } from "./core/resources";
 import { Tree, makeTree, TreeNode, NodeID, serializeTree, deserializeTree } from "./core/tree";
-import { HotKeys } from "react-hotkeys";
+import { GlobalHotKeys } from "react-hotkeys";
 
-import keyMap from "./core/keyMap"
 import ResourceEditor from "./ResourceEditor";
 import ResourceAdder from "./ResourceAdder";
 
@@ -192,7 +191,15 @@ export default class App extends Component<{
         (saveAs as any)(new Blob([dumpedTree], {type: "text/plain;charset=utf-8"}), "tree.json");
     }
 
-    keyboardHandlers = {
+    keyMap = {
+        LEFT: ["h", "left"],
+        RIGHT: ["l", "right"],
+        UP: ["k", "up"],
+        DOWN: ["j", "down"],
+        DELETE_NODE: ["del", "d"],
+    };
+
+    handlers = {
         LEFT: this.selectParentNode,
         RIGHT: this.selectChildNode,
         UP: this.selectPrevChildNode,
@@ -203,7 +210,8 @@ export default class App extends Component<{
     render()
     {
         return (
-            <HotKeys keyMap={keyMap} handlers={this.keyboardHandlers}>
+            <>
+                <GlobalHotKeys keyMap={this.keyMap} handlers={this.handlers}/>
                 <div className="App">
                     {
                     // TODO: extract this to seperate component
@@ -246,7 +254,7 @@ export default class App extends Component<{
                         </div>
                     </div>
                 </div>
-            </HotKeys>
+            </>
         );
     }
 

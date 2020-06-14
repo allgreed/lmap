@@ -56,6 +56,17 @@ export default class App extends Component<{
         localStorage.setItem("tree", serializedTree);
     }
 
+    removeTree = () =>
+    {
+        const initial_resource: Resource = {__typename: "Null"};
+        const newTree = makeTree(initial_resource);
+
+        this.setState({
+            ourTree: newTree,
+            chosenNode: newTree.root.id
+        });
+    }
+
     attachNewNodeToSelected = (r: Resource) =>
     {
         this.setState({
@@ -171,6 +182,7 @@ export default class App extends Component<{
                             <input type="file" onChange = { e => this.readFromFile(e) }/>
                         </form>
                         <button onClick = { e => this.outputToFile() }>Pluj do pliku</button>
+                        <button onClick = { e => this.removeTree() }>Usuń obecne drzewo</button>
                     </div>
                 </div>
             </div>

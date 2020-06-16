@@ -1,6 +1,7 @@
 // TODO: how to limit importing scope?
 import { Resource, Link, Text } from "./core/resources";
 import { Tree, makeTree, TreeNode, NodeID, serializeTree, deserializeTree } from "./core/tree";
+import { GlobalHotKeys } from "react-hotkeys";
 
 import ResourceEditor from "./ResourceEditor";
 import ResourceAdder from "./ResourceAdder";
@@ -83,6 +84,67 @@ export default class App extends Component<{
         });
     }
 
+    selectParentNode = () =>
+    {
+        const root = this.state.ourTree.root
+        const node = this.state.ourTree._selectNodeById(this.state.chosenNode)
+        if (node !== root)
+        {
+            const parent = root.getParent(node, root)
+        
+            this.setState({
+                chosenNode: parent.id
+            })
+        }
+    }
+
+    selectChildNode = () =>
+    {
+        const node = this.state.ourTree._selectNodeById(this.state.chosenNode)
+        if (node.children.length !== 0)
+        {
+            const child = node.children[0]
+        
+            this.setState({
+                chosenNode: child.id
+            })
+        }
+    }
+
+    selectNextChildNode = () =>
+    {
+        const root = this.state.ourTree.root
+        const node = this.state.ourTree._selectNodeById(this.state.chosenNode)
+        if (node !== root)
+        {
+            const parent = root.getParent(node, root)
+            const indexOfNode = parent.children.indexOf(node)
+            const indexOfNextChild = Math.min(indexOfNode+1, parent.children.length-1)
+            const nextChild = parent.children[indexOfNextChild]
+            
+            this.setState({
+                chosenNode: nextChild.id
+            })
+        }
+    }
+
+    selectPrevChildNode = () =>
+    {
+        const root = this.state.ourTree.root
+        const node = this.state.ourTree._selectNodeById(this.state.chosenNode)
+        if (node !== root)
+        {
+            const parent = root.getParent(node, root)
+            const indexOfNode = parent.children.indexOf(node)
+            const indexOfPrevChild = Math.max(indexOfNode-1, 0)
+            const prevChild = parent.children[indexOfPrevChild]
+            
+            this.setState({
+                chosenNode: prevChild.id
+            })
+        }
+    }
+
     replaceSelectedNodeContents = (r: Resource) =>
     {
         // TODO: get rid of private access
@@ -129,51 +191,70 @@ export default class App extends Component<{
         (saveAs as any)(new Blob([dumpedTree], {type: "text/plain;charset=utf-8"}), "tree.json");
     }
 
+    keyMap = {
+        LEFT: ["h", "left"],
+        RIGHT: ["l", "right"],
+        UP: ["k", "up"],
+        DOWN: ["j", "down"],
+        DELETE_NODE: ["del", "d"],
+    };
+
+    handlers = {
+        LEFT: this.selectParentNode,
+        RIGHT: this.selectChildNode,
+        UP: this.selectPrevChildNode,
+        DOWN: this.selectNextChildNode,
+        DELETE_NODE: this.removeSelectedNode,
+    };
+
     render()
     {
         return (
-            <div className="App">
-                {
-                    // TODO: extract this to seperate component
-                }
-                <ReactTreeGraph
-                    data={displayTree(this.state.ourTree, this.state.chosenNode)}
-                    gProps={{
-                        onClick: (_: any, node_id: NodeID) => { this.selectNode(node_id) }
-                    }}
-                    width={window.innerWidth * (3/4)}
-                    height={window.innerHeight * (3/4)}
-                    keyProp="id"
-                />
-
-                <div className="controls">
-                    {
-                    // TODO: Extract ResourceRemover
-                    }
-                    <ResourceEditor 
-                        key={this.state.chosenNode}
-                        resource={this.state.ourTree.nodeData(this.state.chosenNode)}
-                        isDeletable={!this.state.ourTree.isRoot(this.state.chosenNode)}
-                        onDelete={this.removeSelectedNode}
-                        onEditonCommit={this.replaceSelectedNodeContents}
-                    />
-
-                    <ResourceAdder
-                        onAdd={this.attachNewNodeToSelected}
-                    />
-
+            <>
+                <GlobalHotKeys keyMap={this.keyMap} handlers={this.handlers}/>
+                <div className="App">
                     {
                     // TODO: extract this to seperate component
                     }
-                    <div className="block-hax">
-                        <form encType="multipart/form-data" noValidate>
-                            <label className="file-uploader-label">Siorbaj z pliku:</label>
-                            <input type="file" onChange = { e => this.readFromFile(e) }/>
-                        </form>
-                        <button onClick = { e => this.outputToFile() }>Pluj do pliku</button>
+                    <ReactTreeGraph
+                        data={displayTree(this.state.ourTree, this.state.chosenNode)}
+                        gProps={{
+                            onClick: (_: any, node_id: NodeID) => { this.selectNode(node_id) }
+                        }}
+                        width={window.innerWidth * (3/4)}
+                        height={window.innerHeight * (3/4)}
+                        keyProp="id"
+                    />
+
+                    <div className="controls">
+                        {
+                            // TODO: Extract ResourceRemover
+                        }
+                        <ResourceEditor 
+                            key={this.state.chosenNode}
+                            resource={this.state.ourTree.nodeData(this.state.chosenNode)}
+                            isDeletable={!this.state.ourTree.isRoot(this.state.chosenNode)}
+                            onDelete={this.removeSelectedNode}
+                            onEditonCommit={this.replaceSelectedNodeContents}
+                        />
+
+                        <ResourceAdder
+                            onAdd={this.attachNewNodeToSelected}
+                        />
+
+                        {
+                            // TODO: extract this to seperate component
+                        }
+                        <div className="block-hax">
+                            <form encType="multipart/form-data" noValidate>
+                                <label className="file-uploader-label">Siorbaj z pliku:</label>
+                                <input type="file" onChange = { e => this.readFromFile(e) }/>
+                            </form>
+                            <button onClick = { e => this.outputToFile() }>Pluj do pliku</button>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </>
         );
     }
 

@@ -62,6 +62,14 @@ export class Tree<T>
         return this;
     }
 
+    removeSubtree(nodeID: NodeID): Tree<T>
+    {
+        const node = this._selectNodeById(nodeID);
+        node.removeTree(node);
+
+        return this;
+    }
+
     removeNode(which: NodeID): Tree<T>
     {
         if(this.isRoot(which))
@@ -203,8 +211,7 @@ export class TreeNode<T>
 
     removeTree(node: TreeNode<T>) 
     {
-        let chosenChildIndex = node.children.findIndex(child => child === node);
-        this.children.splice(chosenChildIndex, 1);
+        node.children = [];
     }
 
     removeNode(node: TreeNode<T>): number 
@@ -360,5 +367,3 @@ export class TreeIdProvider
         return x === this.ROOT_ID;
     }
 }
-
-

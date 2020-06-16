@@ -77,6 +77,13 @@ export default class App extends Component<{
         });
     }
 
+    removeSubtreeOfSelectedNode = () =>
+    {
+        this.setState({
+            ourTree: this.state.ourTree.removeSubtree(this.state.chosenNode),
+        });
+    }
+
     selectNode = (node_id: NodeID) =>
     {
         this.setState({
@@ -197,6 +204,7 @@ export default class App extends Component<{
         UP: ["k", "up"],
         DOWN: ["j", "down"],
         DELETE_NODE: ["del", "d"],
+        DELETE_SUBTREE: ["shift+d"],
     };
 
     handlers = {
@@ -205,6 +213,7 @@ export default class App extends Component<{
         UP: this.selectPrevChildNode,
         DOWN: this.selectNextChildNode,
         DELETE_NODE: this.removeSelectedNode,
+        DELETE_SUBTREE: this.removeSubtreeOfSelectedNode
     };
 
     render()
@@ -236,6 +245,7 @@ export default class App extends Component<{
                             isDeletable={!this.state.ourTree.isRoot(this.state.chosenNode)}
                             onDelete={this.removeSelectedNode}
                             onEditonCommit={this.replaceSelectedNodeContents}
+                            onRemoveSubtree={this.removeSubtreeOfSelectedNode}
                         />
 
                         <ResourceAdder

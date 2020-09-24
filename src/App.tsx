@@ -258,7 +258,7 @@ export default class App extends Component<{
                         <div className="block-hax">
                             <form encType="multipart/form-data" noValidate>
                                 <label className="file-uploader-label">Import:</label>
-                                <input type="file" onChange = { e => this.readFromFile(e) }/>
+                                <input type="file" className="import-input" onChange = { e => this.readFromFile(e) }/>
                             </form>
                             <button onClick = { e => this.outputToFile() }>Export</button>
                         </div>

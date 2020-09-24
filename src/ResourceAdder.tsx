@@ -32,7 +32,7 @@ const ResourceAdder: React.FunctionComponent<{
                         .map(t => <option value={t}>{t}</option>)
                 }
             </Field>
-            <button type="submit"> Dodaj </button>
+            <button type="submit"> Add </button>
         </Form>
     </Formik>
 

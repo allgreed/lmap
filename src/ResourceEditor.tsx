@@ -35,9 +35,9 @@ const ResourceEditor: React.FunctionComponent<{
         <Form translate="yes"> 
             { resource_to_fields(props.resource) }
             <div className="block-hax"></div>
-            <button type="button" disabled={!props.isDeletable} onClick={_ => props.onDelete()} > Usuń </button>
-            <button type="button" onClick={_ => props.onRemoveSubtree()} > Usuń poddrzewo </button>
-            <button type="submit"> Zapisz </button>
+            <button type="button" disabled={!props.isDeletable} onClick={_ => props.onDelete()} > Remove </button>
+            <button type="button" onClick={_ => props.onRemoveSubtree()} > Remove subtree </button>
+            <button type="submit"> Save </button>
         </Form>
     </Formik>
 

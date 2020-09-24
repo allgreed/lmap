@@ -87,3 +87,7 @@ label {
   min-height: 25vh;
   background-color: #444;
 }
+
+.import-input {
+    color: transparent;
+}

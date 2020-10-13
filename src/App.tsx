@@ -5,6 +5,7 @@ import { GlobalHotKeys } from "react-hotkeys";
 
 import ResourceEditor from "./ResourceEditor";
 import ResourceAdder from "./ResourceAdder";
+import Path from "./Path";
 
 import React, { Component } from "react";
 import { debounce } from "lodash";
@@ -21,6 +22,7 @@ export default class App extends Component<{
 }, {
     chosenNode: NodeID,
     ourTree: Tree<Resource>
+    currentPath: NodeID[],
 }>
 {
     // TODO: what is the correct empty props type? o.0
@@ -34,6 +36,7 @@ export default class App extends Component<{
         this.state= {
             chosenNode: ourTree.root.id,
             ourTree,
+            currentPath: [ourTree.root.id],
         };
     }
 
@@ -110,10 +113,13 @@ export default class App extends Component<{
         const node = this.state.ourTree._selectNodeById(this.state.chosenNode)
         if (node.children.length !== 0)
         {
-            const child = node.children[0]
-        
+            const hasPreviouslySelectedChild = node.children.some(child => this.state.currentPath.includes(child.id))
+            const child = node.children.find(child => this.state.currentPath.includes(child.id) ) || node.children[0]
+            const path = [...this.state.currentPath, ...(hasPreviouslySelectedChild ? [] : [node.children[0].id])]
+
             this.setState({
-                chosenNode: child.id
+                chosenNode: child.id,
+                currentPath: path,
             })
         }
     }
@@ -129,8 +135,12 @@ export default class App extends Component<{
             const indexOfNextChild = Math.min(indexOfNode+1, parent.children.length-1)
             const nextChild = parent.children[indexOfNextChild]
             
+            const depth = this.state.currentPath.indexOf(parent.id)+1
+            const path = [...this.state.currentPath.slice(0, depth), nextChild.id]
+
             this.setState({
-                chosenNode: nextChild.id
+                chosenNode: nextChild.id,
+                currentPath: path,
             })
         }
     }
@@ -146,8 +156,13 @@ export default class App extends Component<{
             const indexOfPrevChild = Math.max(indexOfNode-1, 0)
             const prevChild = parent.children[indexOfPrevChild]
             
+            const depth = this.state.currentPath.indexOf(parent.id)+1
+            const path = [...this.state.currentPath.slice(0, depth), prevChild.id]
+
             this.setState({
-                chosenNode: prevChild.id
+                chosenNode: prevChild.id,
+                currentPath: path,
+
             })
         }
     }
@@ -225,6 +240,10 @@ export default class App extends Component<{
                     {
                     // TODO: extract this to seperate component
                     }
+                    <Path
+                        currentPath={this.state.currentPath}
+                        chosenNode={this.state.chosenNode}
+                    />
                     <ReactTreeGraph
                         data={displayTree(this.state.ourTree, this.state.chosenNode)}
                         gProps={{

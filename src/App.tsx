@@ -87,9 +87,16 @@ export default class App extends Component<{
 
     selectNode = (node_id: NodeID) =>
     {
-        this.setState({
-            chosenNode: node_id,
-        });
+        const root = this.state.ourTree.root
+        const node = this.state.ourTree._selectNodeById(node_id)
+        if (node !== root)
+        {
+            const parent = root.getParent(node, root)
+            parent.lastSelectedChild = node_id
+            this.setState({
+                chosenNode: node_id,
+            });
+        }
     }
 
     selectParentNode = () =>
@@ -99,7 +106,7 @@ export default class App extends Component<{
         if (node !== root)
         {
             const parent = root.getParent(node, root)
-        
+            parent.lastSelectedChild = node.id
             this.setState({
                 chosenNode: parent.id
             })
@@ -114,7 +121,7 @@ export default class App extends Component<{
             const child = node.children[0]
         
             this.setState({
-                chosenNode: child.id
+                chosenNode: node.lastSelectedChild || child.id
             })
         }
     }
@@ -129,7 +136,9 @@ export default class App extends Component<{
             const indexOfNode = parent.children.indexOf(node)
             const indexOfNextChild = Math.min(indexOfNode+1, parent.children.length-1)
             const nextChild = parent.children[indexOfNextChild]
-            
+
+            parent.lastSelectedChild = nextChild.id
+
             this.setState({
                 chosenNode: nextChild.id
             })
@@ -146,6 +155,8 @@ export default class App extends Component<{
             const indexOfNode = parent.children.indexOf(node)
             const indexOfPrevChild = Math.max(indexOfNode-1, 0)
             const prevChild = parent.children[indexOfPrevChild]
+            
+            parent.lastSelectedChild = prevChild.id
             
             this.setState({
                 chosenNode: prevChild.id

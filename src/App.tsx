@@ -10,6 +10,7 @@ import Path from "./Path";
 import React, { Component } from "react";
 import { debounce } from "lodash";
 import saveAs from "file-saver";
+import axios from "axios";
 
 import "./App.css";
 import "react-tree-graph/dist/style.css";
@@ -213,6 +214,27 @@ export default class App extends Component<{
         (saveAs as any)(new Blob([dumpedTree], {type: "text/plain;charset=utf-8"}), "tree.json");
     }
 
+    persist()
+    {
+        const serializedTree = serializeTree(this.state.ourTree)
+        //TODO move this to env vars - see my super post
+        axios.post("http://localhost:12694", serializedTree)
+    }
+
+    retreive()
+    {
+        //TODO move this to env vars - see my super post
+        axios.get("http://localhost:12694")
+            .then(response => 
+            {
+                const tree = deserializeTree<Resource>(JSON.stringify(response.data));
+                this.setState({
+                    ourTree: tree,
+                    chosenNode: tree.root.id
+                });
+            })
+    }
+
     keyMap = {
         LEFT: ["h", "left"],
         RIGHT: ["l", "right"],
@@ -280,6 +302,8 @@ export default class App extends Component<{
                                 <input type="file" className="import-input" onChange = { e => this.readFromFile(e) }/>
                             </form>
                             <button onClick = { e => this.outputToFile() }>Export</button>
+                            <button onClick = { e => this.persist() }>Send</button>
+                            <button onClick = { e => this.retreive() }>Load</button>
                         </div>
                     </div>
                 </div>

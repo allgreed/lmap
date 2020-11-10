@@ -196,12 +196,14 @@ export class TreeNode<T>
     // TODO: how about children being Sets?
     children: TreeNode<T>[];
     data: T;
+    lastSelectedChild: NodeID | null;
 
     constructor(id: NodeID, data: T, children: TreeNode<T>[] = [])
     {
         this.data = data;
         this.id = id;
         this.children = children;
+        this.lastSelectedChild = null
     }
 
     _append(node: TreeNode<T>)
